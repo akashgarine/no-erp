@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>noERP — Goodbye Data Entry. Hello Performance.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f7f8fc;--bg2:#eef0f7;--surface:#fff;--surf2:#f2f4fb;--border:rgba(15,20,40,.08);--border2:rgba(15,20,40,.14);--text:#0f1428;--text2:#4a5270;--text3:#9aa0b8;--blue:#2563eb;--blue2:#1d4ed8;--bd:rgba(37,99,235,.09);--bd2:rgba(37,99,235,.16);--green:#059669;--gd:rgba(5,150,105,.09);--amber:#d97706;--rose:#e11d48;--purple:#7c3aed;--teal:#0d9488;--r:10px;--r2:14px;--r3:18px;--ink:#0f1428;--accent:#2563eb}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:var(--bg);color:var(--text);font-size:16px;line-height:1.65;overflow-x:hidden;-webkit-font-smoothing:antialiased;display:flex;flex-direction:column;min-height:100vh}
+h1{font-family:'Sora',sans-serif;font-size:clamp(2.2rem,5.5vw,4.4rem);line-height:1.1;letter-spacing:-.04em;font-weight:700}
+h2{font-family:'Sora',sans-serif;font-size:clamp(1.6rem,3vw,2.5rem);line-height:1.15;letter-spacing:-.03em;font-weight:700}
+h3{font-size:1rem;font-weight:700;color:var(--text)}
+p{color:var(--text2)}
+a{text-decoration:none}
+.container{max-width:1160px;margin:0 auto;padding:0 28px}
+.page{display:none}.page.active{display:block;flex:1}
+section{padding:88px 0}
+nav{position:sticky;top:0;z-index:300;background:rgba(247,248,252,.92);backdrop-filter:blur(20px) saturate(1.6);border-bottom:1px solid var(--border);box-shadow:0 1px 0 rgba(0,0,0,.04)}
+.nav-inner{max-width:1160px;margin:0 auto;padding:0 28px;height:60px;display:flex;align-items:center;gap:6px}
+.nav-logo{display:flex;align-items:center;gap:8px;margin-right:6px;flex-shrink:0;cursor:pointer;text-decoration:none}
+.nav-logo-icon{width:34px;height:34px}
+.nav-logo-text{font-family:'Sora',sans-serif;font-size:1.35rem;font-weight:700;color:var(--text);letter-spacing:-.02em}
+.nav-logo-text em{font-style:normal;color:var(--blue)}
+.nav-links{display:flex;align-items:center;gap:2px;flex:1}
+.nav-btn{background:none;border:none;cursor:pointer;font-family:'Plus Jakarta Sans',sans-serif;font-size:.875rem;font-weight:500;color:var(--text2);padding:6px 12px;border-radius:9px;transition:all .15s;display:inline-flex;align-items:center;gap:5px;text-decoration:none;white-space:nowrap;line-height:1}
+.nav-btn:hover,.nav-btn.current{color:var(--text);background:rgba(15,20,40,.05)}
+.nav-btn.current{color:var(--blue);font-weight:600;background:var(--bd)}
+.nav-chevron{width:14px;height:14px;transition:transform .2s;flex-shrink:0}
+.nav-item{position:relative}
+.dropdown{position:absolute;top:calc(100% + 8px);left:-8px;background:var(--surface);border:1px solid var(--border2);border-radius:var(--r3);padding:10px;min-width:256px;box-shadow:0 20px 56px rgba(0,0,0,.12);opacity:0;visibility:hidden;transform:translateY(-8px);transition:all .22s cubic-bezier(.16,1,.3,1);pointer-events:none}
+.nav-item.open .dropdown{opacity:1;visibility:visible;transform:translateY(0);pointer-events:all}
+.dd-label{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);padding:8px 10px 4px}
+.dd-link{display:flex;align-items:center;gap:9px;padding:7px 10px;font-size:.84rem;color:var(--text2);border-radius:8px;transition:all .12s;cursor:pointer}
+.dd-link:hover{background:var(--surf2);color:var(--text)}
+.nav-item.open .nav-chevron{transform:rotate(180deg)}
+.dd-icon{width:26px;height:26px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.nav-right{display:flex;align-items:center;gap:8px;margin-left:auto;flex-shrink:0}
+.nav-signin{font-family:'Plus Jakarta Sans',sans-serif;font-size:.875rem;font-weight:500;color:var(--text2);padding:6px 14px;border-radius:9px;border:1.5px solid var(--border2);background:var(--surface);cursor:pointer;transition:all .15s}
+.nav-signin:hover{border-color:rgba(15,20,40,.22);color:var(--text)}
+.nav-demo{font-family:'Plus Jakarta Sans',sans-serif;font-size:.875rem;font-weight:600;background:var(--blue);color:#fff;padding:7px 17px;border-radius:9px;border:none;cursor:pointer;display:flex;align-items:center;gap:6px;transition:all .18s;box-shadow:0 2px 8px rgba(37,99,235,.28)}
+.nav-demo:hover{background:var(--blue2);box-shadow:0 4px 16px rgba(37,99,235,.38);transform:translateY(-1px)}
+.hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;background:none;border:none;padding:7px;border-radius:9px}
+.hamburger span{display:block;width:22px;height:2px;background:var(--text);border-radius:2px;transition:all .25s cubic-bezier(.16,1,.3,1)}
+.hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+.hamburger.open span:nth-child(2){opacity:0;transform:scaleX(0)}
+.hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+.mob-nav{display:none;position:fixed;top:60px;left:0;right:0;bottom:0;background:var(--surface);z-index:290;overflow-y:auto;padding:16px 20px 48px;transform:translateX(100%);transition:transform .3s cubic-bezier(.16,1,.3,1);border-top:1px solid var(--border)}
+.mob-nav.open{transform:translateX(0)}
+.mob-label{font-size:.67rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);padding:18px 4px 8px;display:block}
+.mob-link{display:flex;align-items:center;gap:10px;padding:13px 8px;font-size:.95rem;color:var(--text2);border-bottom:1px solid var(--border);transition:color .12s;cursor:pointer}
+.mob-link:hover,.mob-link.current{color:var(--blue)}
+.mob-cta{display:block;margin-top:20px;background:var(--blue);color:#fff;text-align:center;padding:15px;border-radius:11px;font-weight:600;font-size:1rem;cursor:pointer}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:10px;font-size:.95rem;font-weight:600;cursor:pointer;border:none;font-family:'Plus Jakarta Sans',sans-serif;transition:all .2s;text-decoration:none}
+.btn-primary{background:var(--blue);color:#fff;box-shadow:0 2px 12px rgba(37,99,235,.28)}
+.btn-primary:hover{background:var(--blue2);box-shadow:0 6px 24px rgba(37,99,235,.4);transform:translateY(-2px)}
+.btn-ghost{background:var(--surface);color:var(--text);border:1.5px solid var(--border2);box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.btn-ghost:hover{border-color:rgba(15,20,40,.22);transform:translateY(-1px);box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.btn-lg{padding:13px 28px;font-size:1rem}
+.btn-white{background:#fff;color:var(--blue2);box-shadow:0 2px 12px rgba(0,0,0,.14)}
+.btn-white:hover{background:#f0f4ff;transform:translateY(-2px)}
+.btn-outline-w{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.4)}
+.btn-outline-w:hover{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.6)}
+.pill{display:inline-flex;align-items:center;gap:7px;font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:5px 13px;border-radius:100px;border:1px solid rgba(37,99,235,.2);color:var(--blue);background:var(--bd);margin-bottom:18px}
+.pill-dot{width:5px;height:5px;border-radius:50%;background:var(--blue);animation:pb 2s infinite}
+@keyframes pb{0%,100%{box-shadow:0 0 0 0 rgba(37,99,235,.6)}50%{box-shadow:0 0 0 5px rgba(37,99,235,0)}}
+.sh{text-align:center;max-width:660px;margin:0 auto 64px}
+.sh p{font-size:1.05rem;margin-top:14px;line-height:1.76}
+.iw{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;margin-bottom:14px;flex-shrink:0}
+.iw-blue{background:var(--bd);border:1px solid rgba(37,99,235,.16)}
+.iw-green{background:var(--gd);border:1px solid rgba(5,150,105,.16)}
+.iw-amber{background:rgba(217,119,6,.08);border:1px solid rgba(217,119,6,.15)}
+.iw-purple{background:rgba(124,58,237,.08);border:1px solid rgba(124,58,237,.15)}
+.iw-teal{background:rgba(13,148,136,.08);border:1px solid rgba(13,148,136,.15)}
+.iw-rose{background:rgba(225,29,72,.08);border:1px solid rgba(225,29,72,.15)}
+.hero{position:relative;padding:104px 0 80px;overflow:hidden}
+.hero-bg{position:absolute;inset:0;pointer-events:none}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(37,99,235,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(37,99,235,.04) 1px,transparent 1px);background-size:56px 56px}
+.hero-glow1{position:absolute;width:800px;height:560px;background:radial-gradient(ellipse at 55% 40%,rgba(37,99,235,.1) 0%,transparent 65%);top:-80px;left:0}
+.hero-inner{position:relative;z-index:2;display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.badge{display:inline-flex;align-items:center;gap:8px;font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;padding:6px 14px;border-radius:100px;background:rgba(5,150,105,.09);border:1px solid rgba(5,150,105,.22);color:var(--green);margin-bottom:22px}
+.badge-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:pg 2s infinite}
+@keyframes pg{0%,100%{box-shadow:0 0 0 0 rgba(5,150,105,.6)}50%{box-shadow:0 0 0 5px rgba(5,150,105,0)}}
+.hero h1{margin-bottom:22px}
+.hero h1 em{font-style:italic;color:var(--blue)}
+.hero-sub{font-size:1.1rem;color:var(--text2);line-height:1.8;margin-bottom:38px;max-width:490px}
+.hero-ctas{display:flex;gap:11px;flex-wrap:wrap;margin-bottom:44px}
+.hero-social{display:flex;align-items:center;gap:14px}
+.faces{display:flex}
+.face{width:32px;height:32px;border-radius:50%;border:2px solid var(--surface);margin-left:-8px;display:flex;align-items:center;justify-content:center;font-size:.68rem;font-weight:700;color:#fff;flex-shrink:0}
+.face:first-child{margin-left:0}
+.hero-social p{font-size:.82rem;color:var(--text2)}
+.hero-social strong{color:var(--text)}
+.hero-visual{position:relative}
+.mock-card{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r3);overflow:hidden;box-shadow:0 24px 64px rgba(0,0,0,.11)}
+.mock-bar{background:var(--surf2);padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.mock-dots{display:flex;gap:6px}
+.mock-dot{width:10px;height:10px;border-radius:50%}
+.mock-title{font-size:.72rem;color:var(--text3);font-weight:500;display:flex;align-items:center;gap:7px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.4s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.mock-body{padding:16px}
+.kpi-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.kpi{background:var(--surf2);border:1px solid var(--border);border-radius:9px;padding:10px}
+.kpi-l{font-size:.62rem;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:3px}
+.kpi-v{font-size:1.1rem;font-weight:700;font-family:'Sora',sans-serif;color:var(--text);line-height:1.2}
+.kpi-d{font-size:.62rem;margin-top:2px}
+.d-g{color:var(--green)}.d-a{color:var(--amber)}
+.prog-block{background:var(--surf2);border:1px solid var(--border);border-radius:9px;padding:10px;margin-bottom:9px}
+.pb-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.pb-lbl{font-size:.72rem;font-weight:600;color:var(--text)}
+.pb-pct{font-size:.7rem;color:var(--blue);font-weight:700}
+.pb-track{height:5px;background:var(--bg2);border-radius:99px;overflow:hidden}
+.pb-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--blue),#60a5fa);animation:grow .8s .3s both}
+.pb-fill-g{background:linear-gradient(90deg,var(--green),#34d399)}
+@keyframes grow{from{width:0}}
+.chat-area{background:var(--surf2);border:1px solid var(--border);border-radius:9px;padding:10px}
+.chat-row{display:flex;gap:8px;margin-bottom:7px;align-items:flex-start}
+.chat-row:last-child{margin-bottom:0}
+.av{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.58rem;font-weight:700;flex-shrink:0;color:#fff}
+.av-u{background:#94a3b8}.av-ai{background:linear-gradient(135deg,var(--blue),var(--purple))}
+.bubble{background:var(--surface);border:1px solid var(--border);border-radius:0 8px 8px 8px;padding:6px 9px;font-size:.7rem;color:var(--text2);line-height:1.5;flex:1}
+.bubble.ai{background:rgba(37,99,235,.06);border-color:rgba(37,99,235,.15);color:var(--text)}
+.chip{position:absolute;background:var(--surface);border:1px solid var(--border2);border-radius:var(--r);padding:9px 13px;box-shadow:0 10px 28px rgba(0,0,0,.09);animation:float 4s ease-in-out infinite}
+.chip1{top:-18px;right:-32px;animation-delay:0s}
+.chip2{bottom:32px;left:-32px;animation-delay:-2s}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+.chip-lbl{font-size:.62rem;color:var(--text3);margin-bottom:2px}
+.chip-val{font-size:.86rem;font-weight:700;color:var(--text);display:flex;align-items:center;gap:5px}
+.marquee-wrap{padding:32px 0;border-top:1px solid var(--border);border-bottom:1px solid var(--border);background:var(--surface);overflow:hidden}
+.marquee-lbl{text-align:center;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:18px}
+.marquee-track{display:flex;white-space:nowrap;animation:scrollx 22s linear infinite}
+.m-item{display:inline-flex;align-items:center;gap:9px;padding:0 32px;font-size:.86rem;font-weight:600;color:var(--text3)}
+@keyframes scrollx{0%{transform:translateX(0)}100%{transform:translateX(-50%)}}
+.why-grid{display:grid;grid-template-columns:1fr 1fr;border:1px solid var(--border);border-radius:var(--r3);overflow:hidden;background:var(--surface)}
+.why-cell{padding:28px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);transition:background .18s}
+.why-cell:nth-child(2n){border-right:none}
+.why-cell:nth-child(n+5){border-bottom:none}
+.why-cell:hover{background:var(--surf2)}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:24px;transition:all .22s cubic-bezier(.16,1,.3,1);box-shadow:0 1px 4px rgba(0,0,0,.05);display:flex;flex-direction:column}
+.card:hover{border-color:var(--border2);box-shadow:0 10px 28px rgba(0,0,0,.07);transform:translateY(-3px)}
+.card h3{margin-bottom:9px}
+.card>p{font-size:.87rem;line-height:1.76}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:72px;align-items:center}
+.aud-tabs{display:flex;gap:7px;margin-bottom:22px;flex-wrap:wrap}
+.aud-tab{padding:6px 14px;border-radius:8px;font-size:.82rem;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--text2);font-family:'Plus Jakarta Sans',sans-serif;transition:all .14s}
+.aud-tab.on,.aud-tab:hover{background:var(--bd);border-color:rgba(37,99,235,.25);color:var(--blue)}
+.aud-body{display:none}.aud-body.on{display:block}
+.b-list{list-style:none}
+.b-list li{display:flex;align-items:flex-start;gap:11px;padding:10px 0;border-bottom:1px solid var(--border);font-size:.9rem;color:var(--text2)}
+.b-list li:last-child{border-bottom:none}
+.b-ck{color:var(--green);flex-shrink:0;margin-top:2px}
+.steps{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);border-radius:var(--r3);overflow:hidden;background:var(--surface)}
+.step{padding:28px 24px;border-right:1px solid var(--border);position:relative;transition:background .18s;display:flex;flex-direction:column}
+.step:last-child{border-right:none}
+.step:hover{background:var(--surf2)}
+.step-n{font-family:'Sora',sans-serif;font-size:2.6rem;color:rgba(37,99,235,.1);line-height:1;margin-bottom:14px;display:block}
+.step-arr{position:absolute;top:32px;right:-11px;width:22px;height:22px;background:var(--surface);border:1px solid var(--border2);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--blue);font-size:.68rem;z-index:2;box-shadow:0 2px 6px rgba(0,0,0,.07)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--border);border-radius:var(--r3);overflow:hidden;background:var(--surface);box-shadow:0 2px 12px rgba(0,0,0,.04)}
+.stat{padding:40px 28px;border-right:1px solid var(--border);text-align:center;display:flex;flex-direction:column;align-items:center}
+.stat:last-child{border-right:none}
+.stat-n{font-family:'Sora',sans-serif;font-size:3.2rem;line-height:1;color:var(--text);letter-spacing:-.02em}
+.stat-d{font-size:.83rem;color:var(--text2);margin-top:8px;line-height:1.5}
+.testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;align-items:stretch}
+.testi{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:24px;box-shadow:0 2px 8px rgba(0,0,0,.04);transition:all .2s;display:flex;flex-direction:column}
+.testi:hover{border-color:var(--border2);box-shadow:0 8px 24px rgba(0,0,0,.08)}
+.stars{color:#f59e0b;font-size:.82rem;margin-bottom:14px;letter-spacing:2px}
+.testi-q{font-size:.91rem;color:var(--text2);line-height:1.76;margin-bottom:18px;font-style:italic;flex:1}
+.testi-auth{display:flex;align-items:center;gap:11px;padding-top:14px;border-top:1px solid var(--border)}
+.auth-av{width:38px;height:38px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;color:#fff;flex-shrink:0}
+.auth-name{font-size:.86rem;font-weight:600;color:var(--text)}
+.auth-role{font-size:.73rem;color:var(--text3)}
+.mod-tabs{display:flex;gap:8px;margin-bottom:40px;flex-wrap:wrap}
+.m-tab{padding:7px 17px 7px 9px;border-radius:10px;font-size:.84rem;font-weight:600;cursor:pointer;border:1.5px solid var(--border);background:var(--surface);color:var(--text2);font-family:'Plus Jakarta Sans',sans-serif;transition:all .16s;display:inline-flex;align-items:center;gap:7px}
+.m-tab.on{background:var(--blue);color:#fff;border-color:transparent;box-shadow:0 4px 14px rgba(37,99,235,.28)}
+.m-tab.on .m-ico{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.22);color:#fff}
+.m-tab:hover:not(.on){border-color:var(--border2);color:var(--text);background:var(--surf2)}
+.m-ico{width:24px;height:24px;border-radius:6px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .16s}
+.m-ico.iw-blue{color:#2563eb}.m-ico.iw-amber{color:#d97706}.m-ico.iw-green{color:#059669}.m-ico.iw-purple{color:#7c3aed}.m-ico.iw-rose{color:#e11d48}
+.mod-pane{display:none}.mod-pane.on{display:block}
+.mod-hero{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;margin-bottom:40px}
+.ftags{display:flex;flex-wrap:wrap;gap:7px;margin-top:18px}
+.ftag{padding:5px 11px;background:var(--surf2);border:1px solid var(--border);border-radius:100px;font-size:.76rem;color:var(--text2);font-weight:500}
+.mod-illus{border:1px solid var(--border);border-radius:var(--r2);overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.07)}
+.int-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.int-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:20px 16px;text-align:center;transition:all .2s;box-shadow:0 1px 4px rgba(0,0,0,.05);display:flex;flex-direction:column;align-items:center}
+.int-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.08)}
+.int-logo{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;margin:0 auto 11px}
+.int-card h4{font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:5px}
+.int-card p{font-size:.77rem;line-height:1.6}
+.int-tag{display:inline-flex;align-items:center;gap:5px;font-size:.7rem;color:var(--green);font-weight:600;margin-top:9px}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.p-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r3);padding:28px 26px;position:relative;transition:all .2s;box-shadow:0 2px 10px rgba(0,0,0,.05);display:flex;flex-direction:column}
+.p-card.featured{border-color:rgba(37,99,235,.35);background:linear-gradient(160deg,rgba(37,99,235,.04) 0%,var(--surface) 55%);box-shadow:0 0 0 1px rgba(37,99,235,.18),0 16px 48px rgba(37,99,235,.1);transform:scale(1.03)}
+.p-badge{display:inline-flex;align-items:center;gap:5px;background:var(--blue);color:#fff;font-size:.68rem;font-weight:700;padding:4px 11px;border-radius:100px;margin-bottom:14px;text-transform:uppercase;letter-spacing:.06em}
+.p-tier{font-size:.76rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:5px}
+.p-tag{font-size:.83rem;color:var(--text2);margin-bottom:16px}
+.p-price{font-family:'Sora',sans-serif;font-size:2.8rem;line-height:1;color:var(--text);margin-bottom:3px}
+.p-period{font-size:.78rem;color:var(--text3);margin-bottom:20px}
+.p-feats{list-style:none;border-top:1px solid var(--border);margin:20px 0}
+.pf{padding:9px 0;border-bottom:1px solid var(--border);font-size:.86rem;color:var(--text2);display:flex;align-items:center;gap:9px}
+.pf:last-child{border-bottom:none}
+.pf-ck{color:var(--green)}
+.res-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
+.r-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:24px;transition:all .2s;display:flex;flex-direction:column;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.r-card:hover{border-color:var(--border2);transform:translateY(-3px);box-shadow:0 10px 24px rgba(0,0,0,.07)}
+.r-type{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:var(--blue);margin-bottom:9px}
+.r-card h3{font-size:.97rem;line-height:1.4;margin-bottom:8px}
+.r-card>p{font-size:.85rem;line-height:1.7;flex:1}
+.r-link{display:inline-flex;align-items:center;gap:5px;color:var(--blue);font-size:.83rem;font-weight:600;margin-top:14px}
+.demo-grid{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:flex-start}
+.demo-form{background:var(--surface);border:1px solid var(--border2);border-radius:var(--r3);padding:32px;box-shadow:0 8px 28px rgba(0,0,0,.08)}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.form-g{margin-bottom:15px}
+.form-lbl{display:block;font-size:.8rem;font-weight:600;color:var(--text2);margin-bottom:5px}
+.form-inp,.form-sel,.form-ta{width:100%;padding:10px 13px;background:var(--bg);border:1.5px solid var(--border2);border-radius:9px;font-size:.87rem;font-family:'Plus Jakarta Sans',sans-serif;color:var(--text);transition:border-color .14s;outline:none;line-height:1.5;box-sizing:border-box}
+.form-inp,.form-sel{height:42px}
+.form-sel{appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' fill='none' viewBox='0 0 24 24'%3E%3Cpath d='M6 9l6 6 6-6' stroke='%239aa0b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:34px;cursor:pointer}
+.form-inp:focus,.form-sel:focus,.form-ta:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(37,99,235,.1)}
+.form-ta{height:88px;resize:vertical}
+.demo-ben{display:flex;align-items:flex-start;gap:14px;margin-bottom:26px}
+.b-icon{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.b-txt h4{font-size:.93rem;font-weight:600;color:var(--text);margin-bottom:4px}
+.b-txt p{font-size:.83rem;line-height:1.65}
+.faq-item{border-bottom:1px solid var(--border)}
+.faq-q{display:flex;justify-content:space-between;align-items:center;padding:18px 0;cursor:pointer;font-size:.94rem;font-weight:500;background:none;border:none;width:100%;text-align:left;color:var(--text);font-family:'Plus Jakarta Sans',sans-serif;gap:14px}
+.faq-ico{width:22px;height:22px;border-radius:50%;background:var(--surf2);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;color:var(--text3);font-size:.9rem;flex-shrink:0;transition:all .2s}
+.faq-item.open .faq-ico{background:var(--bd);border-color:rgba(37,99,235,.25);color:var(--blue);transform:rotate(45deg)}
+.faq-a{overflow:hidden;max-height:0;transition:max-height .3s ease}
+.faq-a p{padding:0 0 18px;font-size:.88rem;line-height:1.8;color:var(--text2)}
+.cta-block{position:relative;background:linear-gradient(135deg,#1e40af 0%,#2563eb 55%,#1d4ed8 100%);border-radius:var(--r3);padding:68px 52px;text-align:center;overflow:hidden}
+.cta-block::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 50% -20%,rgba(255,255,255,.12) 0%,transparent 65%)}
+.cta-block h2{position:relative;z-index:1;color:#fff;max-width:520px;margin:0 auto 14px}
+.cta-block p{position:relative;z-index:1;font-size:1.04rem;max-width:440px;margin:0 auto 30px;color:rgba(255,255,255,.75)}
+.cta-btns{position:relative;z-index:1;display:flex;justify-content:center;gap:11px;flex-wrap:wrap}
+footer{background:#0f172a;border-top:1px solid rgba(255,255,255,.06);padding:64px 0 28px;margin-top:auto;flex-shrink:0}
+.footer-grid{display:grid;grid-template-columns:2fr 1fr 1fr 1fr 1fr;gap:44px;margin-bottom:48px}
+.ft-logo{font-family:'Sora',sans-serif;font-size:1.38rem;color:#fff;display:flex;align-items:center;gap:8px}
+.ft-logo em{font-style:normal;color:#60a5fa}
+.ft-brand p{font-size:.83rem;color:rgba(255,255,255,.42);line-height:1.7;margin-top:11px;max-width:240px}
+.ft-col h4{font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.3);margin-bottom:14px}
+.ft-col a,.ft-col span{display:block;color:rgba(255,255,255,.48);font-size:.83rem;margin-bottom:9px;transition:color .13s;cursor:pointer}
+.ft-col a:hover,.ft-col span:hover{color:#fff}
+.ft-bottom{border-top:1px solid rgba(255,255,255,.07);padding-top:22px;display:flex;justify-content:space-between;align-items:center;font-size:.76rem;color:rgba(255,255,255,.28)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.reveal{opacity:0}
+.reveal.in{animation:fadeUp .52s cubic-bezier(.16,1,.3,1) forwards}
+/* ENHANCED RESPONSIVE */
+@media(max-width:960px){
+  .hero-inner,.split,.demo-grid,.mod-hero{grid-template-columns:1fr;gap:36px}
+  .hero-visual{display:none}
+  .steps,.stats{grid-template-columns:1fr 1fr}
+  .step:nth-child(2){border-right:none}
+  .step{border-bottom:1px solid var(--border)}
+  .step-arr{display:none}
+  .pricing-grid,.testi-grid,.res-grid,.int-grid,.g3{grid-template-columns:1fr}
+  .g2,.g4{grid-template-columns:1fr 1fr}
+  .p-card.featured{transform:none}
+  .footer-grid{grid-template-columns:1fr 1fr}
+  .why-grid{grid-template-columns:1fr}
+  .why-cell{border-right:none!important}
+  .cta-block{padding:44px 24px}
+  .nav-links,.nav-signin{display:none}
+  .hamburger{display:flex}
+  .mob-nav{display:block}
+}
+@media(max-width:640px){
+  section{padding:56px 0}
+  .container{padding:0 16px}
+  .g2,.g4,.stats,.steps{grid-template-columns:1fr}
+  .stat{border-right:none;border-bottom:1px solid var(--border)}
+  .stat:last-child{border-bottom:none}
+  .step{border-right:none}
+  .hero{padding:72px 0 56px}
+  .hero h1{font-size:clamp(1.8rem,7vw,2.6rem)}
+  .hero-sub{font-size:.95rem}
+  .hero-ctas{flex-direction:column}
+  .hero-ctas .btn{width:100%;justify-content:center}
+  .btn-lg{padding:12px 20px;font-size:.92rem}
+  .sh{margin-bottom:40px}
+  .sh p{font-size:.92rem}
+  .footer-grid{grid-template-columns:1fr;gap:28px}
+  .ft-bottom{flex-direction:column;gap:8px;text-align:center}
+  .form-row{grid-template-columns:1fr}
+  .demo-grid{gap:32px}
+  .mod-tabs{gap:6px}
+  .m-tab{font-size:.78rem;padding:6px 12px 6px 7px}
+  .aud-tabs{gap:5px}
+  .aud-tab{font-size:.78rem;padding:5px 11px}
+  .pricing-grid{gap:14px}
+  .marquee-lbl{font-size:.65rem}
+}
+@media(min-width:641px) and (max-width:960px){
+  .int-grid{grid-template-columns:1fr 1fr}
+  .pricing-grid{grid-template-columns:1fr}
+  .testi-grid{grid-template-columns:1fr}
+  .res-grid{grid-template-columns:1fr 1fr}
+}
+</style>
+</head>
+<body>
+<script>
+var _cur = 'home';
+var _mobOpen = false;
+
+function go(id) {
+  if (id === _cur) return;
+  document.getElementById('page-' + _cur).classList.remove('active');
+  document.getElementById('page-' + id).classList.add('active');
+  _cur = id;
+  window.scrollTo({top: 0, behavior: 'smooth'});
+  updateNav(id);
+  setTimeout(attachReveal, 60);
+}
+function updateNav(id) {
+  document.querySelectorAll('.nav-btn[id^="nb-"]').forEach(function(el) { el.classList.remove('current'); });
+  var nb = document.getElementById('nb-' + id);
+  if (nb) nb.classList.add('current');
+  document.querySelectorAll('.mob-link[id^="mb-"]').forEach(function(el) { el.classList.remove('current'); });
+  var mb = document.getElementById('mb-' + id);
+  if (mb) mb.classList.add('current');
+}
+function toggleMob() {
+  _mobOpen = !_mobOpen;
+  document.getElementById('mob').classList.toggle('open', _mobOpen);
+  document.getElementById('hbg').classList.toggle('open', _mobOpen);
+  document.body.style.overflow = _mobOpen ? 'hidden' : '';
+}
+function swMod(btn, id) {
+  document.querySelectorAll('.m-tab').forEach(function(t) { t.classList.remove('on'); });
+  document.querySelectorAll('.mod-pane').forEach(function(p) { p.classList.remove('on'); });
+  btn.classList.add('on');
+  document.getElementById('mod-' + id).classList.add('on');
+}
+function setMod(id) {
+  document.querySelectorAll('.m-tab').forEach(function(t) {
+    var oc = t.getAttribute('data-action') || '';
+    t.classList.toggle('on', oc.indexOf('mod:' + id) !== -1);
+  });
+  document.querySelectorAll('.mod-pane').forEach(function(p) { p.classList.remove('on'); });
+  var pane = document.getElementById('mod-' + id);
+  if (pane) pane.classList.add('on');
+}
+function swAud(btn, id) {
+  document.querySelectorAll('.aud-tab').forEach(function(t) { t.classList.remove('on'); });
+  document.querySelectorAll('.aud-body').forEach(function(b) { b.classList.remove('on'); });
+  btn.classList.add('on');
+  document.getElementById('aud-' + id).classList.add('on');
+}
+function faq(btn) {
+  var item = btn.closest('.faq-item');
+  var wasOpen = item.classList.contains('open');
+  document.querySelectorAll('.faq-item').forEach(function(i) {
+    i.classList.remove('open');
+    i.querySelector('.faq-a').style.maxHeight = '0';
+  });
+  if (!wasOpen) {
+    item.classList.add('open');
+    item.querySelector('.faq-a').style.maxHeight = item.querySelector('.faq-a').scrollHeight + 'px';
+  }
+}
+function attachReveal() {
+  var io = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, {threshold: 0.07});
+  var pg = '#page-' + _cur + ' ';
+  document.querySelectorAll(pg + '.reveal').forEach(function(el) {
+    if (!el.classList.contains('in')) io.observe(el);
+  });
+  ['.card','.stat','.testi','.r-card','.int-card','.step','.why-cell','.p-card'].forEach(function(s) {
+    document.querySelectorAll(pg + s).forEach(function(el, i) {
+      if (!el.classList.contains('reveal')) {
+        el.classList.add('reveal');
+        el.style.animationDelay = (i % 4) * 0.06 + 's';
+      }
+      io.observe(el);
+    });
+  });
+}
+document.addEventListener('DOMContentLoaded', function() {
+  document.addEventListener('click', function(e) {
+    var el = e.target.closest('[data-action]');
+    if (!el) {
+      if (_mobOpen && !e.target.closest('nav') && !e.target.closest('.mob-nav')) toggleMob();
+      return;
+    }
+    var action = el.getAttribute('data-action');
+    if (_ddEl && action && !action.includes('nb-modules')) { _ddOpen = false; _ddEl.classList.remove('open'); }
+    if (!action) return;
+    var parts = action.split('|');
+    parts.forEach(function(part) {
+      if (part.startsWith('go:')) { go(part.slice(3)); }
+      else if (part.startsWith('mod:')) { setMod(part.slice(4)); }
+      else if (part.startsWith('swAud:')) { swAud(el, part.slice(6)); }
+      else if (part.startsWith('swMod:')) { swMod(el, part.slice(6)); }
+      else if (part === 'toggleMob') { toggleMob(); }
+      else if (part === 'mob') { toggleMob(); }
+      else if (part === 'faq') { faq(el); }
+    });
+  });
+  var _ddOpen = false;
+  var _ddEl = document.querySelector('.nav-item');
+  var _ddBtn = document.getElementById('nb-modules');
+  if (_ddBtn && _ddEl) {
+    _ddBtn.addEventListener('click', function(e) {
+      e.stopPropagation();
+      _ddOpen = !_ddOpen;
+      _ddEl.classList.toggle('open', _ddOpen);
+    });
+  }
+  document.addEventListener('click', function(e) {
+    if (_ddOpen && _ddEl && !_ddEl.contains(e.target)) {
+      _ddOpen = false;
+      _ddEl.classList.remove('open');
+    }
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && _ddOpen && _ddEl) {
+      _ddOpen = false;
+      _ddEl.classList.remove('open');
+      if (_ddBtn) _ddBtn.focus();
+    }
+  });
+  attachReveal();
+});
+function submitDemo(btn) {
+  var form = btn.closest('.demo-form');
+  var email = form.querySelector('input[type="email"]');
+  if (email && !email.value.trim()) {
+    email.focus();
+    email.style.borderColor = '#e11d48';
+    setTimeout(function(){ email.style.borderColor = ''; }, 2000);
+    return;
+  }
+  btn.textContent = 'Thank you! Demo booked — we will be in touch within 24 hours.';
+  btn.disabled = true;
+  btn.style.background = '#059669';
+  btn.style.cursor = 'default';
+}
+</script>
+<!-- NAV -->
+<nav id="main-nav">
+<div class="nav-inner">
+  <span class="nav-logo" data-action="go:home">
+    <svg class="nav-logo-icon" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="logoBg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#2563eb"/><stop offset="1" stop-color="#1d4ed8"/></linearGradient>
+        <linearGradient id="logoAccent" x1="24" y1="10" x2="34" y2="20" gradientUnits="userSpaceOnUse"><stop stop-color="#60a5fa"/><stop offset="1" stop-color="#93c5fd"/></linearGradient>
+      </defs>
+      <rect width="40" height="40" rx="12" fill="url(#logoBg)"/>
+      <rect x="1" y="1" width="38" height="38" rx="11" fill="none" stroke="rgba(255,255,255,.12)" stroke-width="1"/>
+      <path d="M10 27V14a3 3 0 013-3h2a3 3 0 013 3v13" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M18 18h5a3 3 0 013 3v6" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="30" cy="13" r="5" fill="url(#logoAccent)"/>
+      <path d="M27.5 13l1.8 1.8L33 11.5" stroke="#fff" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    <span class="nav-logo-text"><em>no</em>ERP</span>
+  </span>
+  <div class="nav-links">
+    <div class="nav-item">
+      <button class="nav-btn" id="nb-modules">Features<svg class="nav-chevron" viewBox="0 0 24 24" fill="none"><path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="dropdown">
+        <div class="dd-label">AI Platform</div>
+        <span class="dd-link" data-action="go:modules|mod:ai"><span class="dd-icon iw-blue"><svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M12 2a7 7 0 017 7c0 2.5-1.3 4.7-3.3 6L15 21H9l-.7-6A7 7 0 0112 2z" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round"/></svg></span>Native AI Automation</span>
+        <span class="dd-link" data-action="go:modules|mod:ai"><span class="dd-icon iw-blue"><svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round"/></svg></span>Chat Engine</span>
+        <div class="dd-label">Performance</div>
+        <span class="dd-link" data-action="go:modules|mod:perf"><span class="dd-icon iw-amber"><svg width="13" height="13" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#d97706" stroke-width="1.8"/><path d="M12 8v4l3 3" stroke="#d97706" stroke-width="1.8" stroke-linecap="round"/></svg></span>Goals &amp; OKRs</span>
+        <span class="dd-link" data-action="go:modules|mod:analytics"><span class="dd-icon iw-amber"><svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M3 3v18h18" stroke="#d97706" stroke-width="1.8" stroke-linecap="round"/><path d="M7 16l4-4 4 4 4-4" stroke="#d97706" stroke-width="1.8" stroke-linecap="round"/></svg></span>People Analytics</span>
+        <div class="dd-label">Operations</div>
+        <span class="dd-link" data-action="go:modules|mod:hris"><span class="dd-icon iw-green"><svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#059669" stroke-width="1.8"/><circle cx="9" cy="7" r="4" stroke="#059669" stroke-width="1.8"/></svg></span>HRIS &amp; Payroll</span>
+        <span class="dd-link" data-action="go:modules|mod:fin"><span class="dd-icon iw-purple"><svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" stroke="#7c3aed" stroke-width="1.8" stroke-linecap="round"/></svg></span>Power ERP — Finance</span>
+        <span class="dd-link" data-action="go:modules|mod:clm"><span class="dd-icon iw-rose"><svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M9 12h6M17 21H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v11a2 2 0 01-2 2z" stroke="#e11d48" stroke-width="1.8" stroke-linecap="round"/></svg></span>CLM</span>
+      </div>
+    </div>
+    <span class="nav-btn" id="nb-integrations" data-action="go:integrations">Integrations</span>
+    <span class="nav-btn" id="nb-pricing" data-action="go:pricing">Pricing</span>
+    <span class="nav-btn" id="nb-resources" data-action="go:resources">Resources</span>
+  </div>
+  <div class="nav-right">
+    <button class="nav-demo" data-action="go:demo">Book Demo</button>
+    <button class="hamburger" id="hbg" data-action="toggleMob"><span></span><span></span><span></span></button>
+  </div>
+</div>
+</nav>
+<div class="mob-nav" id="mob">
+  <span class="mob-label">Platform</span>
+  <span class="mob-link" data-action="go:modules|mod:ai|mob">AI Platform</span>
+  <span class="mob-link" data-action="go:modules|mod:perf|mob">Performance</span>
+  <span class="mob-link" data-action="go:modules|mod:hris|mob">HRIS &amp; Payroll</span>
+  <span class="mob-link" data-action="go:modules|mod:fin|mob">Power ERP — Finance</span>
+  <span class="mob-link" data-action="go:modules|mod:clm|mob">CLM</span>
+  <span class="mob-label">Explore</span>
+  <span class="mob-link" id="mb-integrations" data-action="go:integrations|mob">Integrations</span>
+  <span class="mob-link" id="mb-pricing" data-action="go:pricing|mob">Pricing</span>
+  <span class="mob-link" id="mb-resources" data-action="go:resources|mob">Resources</span>
+  <span class="mob-cta" data-action="go:demo|mob">Book a Demo &#8594;</span>
+</div>
+<!-- HOME -->
+<div id="page-home" class="page active">
+<section class="hero">
+  <div class="hero-bg"><div class="hero-grid"></div><div class="hero-glow1"></div></div>
+  <div class="container">
+    <div class="hero-inner">
+      <div>
+        <div class="badge"><span class="badge-dot"></span>The Post-ERP Era Begins</div>
+        <h1>Goodbye Data Entry.<br><em>Hello Performance.</em></h1>
+        <p class="hero-sub">noERP.com is a single-screen, SLM-powered platform that eliminates ERP complexity, automates workflows, and helps your teams transition from data entry to high-performance outcomes. One screen. One brain. Zero ERP fatigue.</p>
+        <div class="hero-ctas">
+          <button class="btn btn-primary btn-lg" data-action="go:demo">Book a Demo</button>
+          <button class="btn btn-ghost btn-lg" data-action="go:modules">Explore the Platform</button>
+        </div>
+        <div class="hero-social">
+          <div class="faces">
+            <div class="face" style="background:linear-gradient(135deg,#2563eb,#7c3aed)">ML</div>
+            <div class="face" style="background:linear-gradient(135deg,#059669,#0d9488)">KR</div>
+            <div class="face" style="background:linear-gradient(135deg,#d97706,#f59e0b)">AS</div>
+            <div class="face" style="background:linear-gradient(135deg,#e11d48,#f43f5e)">PJ</div>
+          </div>
+          <p><strong>500+ teams</strong> already thriving with noERP</p>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="mock-card">
+          <div class="mock-bar"><div class="mock-dots"><div class="mock-dot" style="background:#f87171"></div><div class="mock-dot" style="background:#fbbf24"></div><div class="mock-dot" style="background:#34d399"></div></div><div class="mock-title"><span class="live-dot"></span>noERP Workspace — Live</div></div>
+          <div class="mock-body">
+            <div class="kpi-row">
+              <div class="kpi"><div class="kpi-l">Team OKR</div><div class="kpi-v">87%</div><div class="kpi-d d-g">+12% this quarter</div></div>
+              <div class="kpi"><div class="kpi-l">Tasks Done</div><div class="kpi-v">142</div><div class="kpi-d d-g">On track</div></div>
+              <div class="kpi"><div class="kpi-l">Pending</div><div class="kpi-v">8</div><div class="kpi-d d-a">3 due today</div></div>
+            </div>
+            <div class="prog-block"><div class="pb-head"><span class="pb-lbl">Q1 Revenue Target</span><span class="pb-pct">74%</span></div><div class="pb-track"><div class="pb-fill" style="width:74%"></div></div></div>
+            <div class="prog-block"><div class="pb-head"><span class="pb-lbl">Employee Satisfaction</span><span class="pb-pct">91%</span></div><div class="pb-track"><div class="pb-fill pb-fill-g" style="width:91%"></div></div></div>
+            <div class="chat-area">
+              <div class="chat-row"><div class="av av-u">YK</div><div class="bubble">Please approve my leave request for next Friday.</div></div>
+              <div class="chat-row"><div class="av av-ai">AI</div><div class="bubble ai">Done! Leave approved for Friday, Mar 14. Your manager has been notified and the calendar is updated.</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="chip chip1"><div class="chip-lbl">Adoption</div><div class="chip-val"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2" stroke="#059669" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>92%</div></div>
+        <div class="chip chip2"><div class="chip-lbl">Data Entry</div><div class="chip-val"><svg width="14" height="14" fill="none" viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>-90%</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-lbl">Trusted integrations with your favorite tools</div>
+  <div class="marquee-track">
+    <span class="m-item">Microsoft 365</span><span class="m-item">Teams</span><span class="m-item">Outlook</span><span class="m-item">HubSpot</span><span class="m-item">GitHub</span><span class="m-item">Slack</span><span class="m-item">Jira</span><span class="m-item">Zoho</span><span class="m-item">Google Workspace</span><span class="m-item">Salesforce</span><span class="m-item">QuickBooks</span><span class="m-item">SAP</span>
+    <span class="m-item">Microsoft 365</span><span class="m-item">Teams</span><span class="m-item">Outlook</span><span class="m-item">HubSpot</span><span class="m-item">GitHub</span><span class="m-item">Slack</span><span class="m-item">Jira</span><span class="m-item">Zoho</span><span class="m-item">Google Workspace</span><span class="m-item">Salesforce</span><span class="m-item">QuickBooks</span><span class="m-item">SAP</span>
+  </div>
+</div>
+
+<!-- WHY noERP -->
+<section><div class="container">
+  <div class="sh reveal"><div class="pill"><span class="pill-dot"></span>Why noERP</div><h2>Today's ERPs are slow, complex, and expensive. We'd love to show you a better way.</h2></div>
+  <div class="why-grid">
+    <div class="why-cell"><div class="iw iw-blue"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" stroke="#2563eb" stroke-width="1.8"/><path d="M8 21h8M12 17v4" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Single-Screen Simplicity</h3><p>All your forms, approvals, notifications, tasks, and workflows live on one intelligent surface. No modules. No navigation. No training needed.</p></div>
+    <div class="why-cell"><div class="iw iw-green"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M12 2a7 7 0 017 7c0 2.5-1.3 4.7-3.3 6L15 21H9l-.7-6A7 7 0 0112 2z" stroke="#059669" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>SLM-Powered Automation</h3><p>Our Small Language Models reduce typing, clicks, and cognitive load by up to 90%. noERP auto-extracts data from emails, chats, CRM, HRMS, code repos, and more.</p></div>
+    <div class="why-cell"><div class="iw iw-amber"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M3 3v18h18" stroke="#d97706" stroke-width="1.8" stroke-linecap="round"/><path d="M7 16l4-4 4 4 4-4" stroke="#d97706" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Performance at the Core</h3><p>Daily actions directly tie into Org KPIs, team goals, and employee skills and performance indicators. Move from process tracking to performance outcomes.</p></div>
+    <div class="why-cell"><div class="iw iw-purple"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="#7c3aed" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Native AI &amp; MCP</h3><p>Built-in AI with MCP integration connects seamlessly with your system of work — chat, email, CRM, finance, and HR modules for true automation.</p></div>
+    <div class="why-cell"><div class="iw iw-teal"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" stroke="#0d9488" stroke-width="1.8"/><path d="M12 18h.01" stroke="#0d9488" stroke-width="2" stroke-linecap="round"/></svg></div><h3>Mobile &amp; Desktop Apps</h3><p>Available on Android, iOS, and desktop. Your teams can stay productive from anywhere, on any device.</p></div>
+    <div class="why-cell"><div class="iw iw-rose"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#e11d48" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Secure &amp; SSO-Enabled</h3><p>SSO-enabled, email domain-driven authentication ensures enterprise-grade security while keeping access simple for your team.</p></div>
+  </div>
+</div></section>
+<!-- AUDIENCE SPLIT -->
+<section style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)"><div class="container">
+  <div class="split">
+    <div>
+      <div class="pill"><span class="pill-dot"></span>Built for Everyone</div>
+      <h2 style="margin-bottom:18px">What noERP Delivers</h2>
+      <div class="aud-tabs">
+        <span class="aud-tab on" data-action="swAud:emp">For Employees</span>
+        <span class="aud-tab" data-action="swAud:lead">For Leaders</span>
+        <span class="aud-tab" data-action="swAud:it">For IT Teams</span>
+      </div>
+      <div id="aud-emp" class="aud-body on">
+        <ul class="b-list">
+          <li><span class="b-ck">&#10003;</span>No more navigating ERP modules</li>
+          <li><span class="b-ck">&#10003;</span>One interface for everything you need</li>
+          <li><span class="b-ck">&#10003;</span>Auto-filled forms &amp; smart suggestions</li>
+          <li><span class="b-ck">&#10003;</span>10x less effort, 10x faster execution</li>
+          <li><span class="b-ck">&#10003;</span>Conversational chat engine for natural interactions</li>
+        </ul>
+      </div>
+      <div id="aud-lead" class="aud-body">
+        <ul class="b-list">
+          <li><span class="b-ck">&#10003;</span>Real-time KPI dashboards</li>
+          <li><span class="b-ck">&#10003;</span>High adoption from Day 1</li>
+          <li><span class="b-ck">&#10003;</span>Transparent performance alignment</li>
+          <li><span class="b-ck">&#10003;</span>Insightful skill-to-outcome mapping</li>
+          <li><span class="b-ck">&#10003;</span>CEO reporting by department, teams, and goals</li>
+        </ul>
+      </div>
+      <div id="aud-it" class="aud-body">
+        <ul class="b-list">
+          <li><span class="b-ck">&#10003;</span>70% faster implementation</li>
+          <li><span class="b-ck">&#10003;</span>60% lower maintenance</li>
+          <li><span class="b-ck">&#10003;</span>Lightweight SLM models — low compute, high accuracy</li>
+          <li><span class="b-ck">&#10003;</span>Integrates with Teams, Outlook, HubSpot, Git, Slack, HRMS, CRM, Finance &amp; more</li>
+          <li><span class="b-ck">&#10003;</span>SSO, audit trails, and enterprise-grade security</li>
+        </ul>
+      </div>
+    </div>
+    <div>
+      <div class="mock-card">
+        <div class="mock-bar"><div class="mock-dots"><div class="mock-dot" style="background:#f87171"></div><div class="mock-dot" style="background:#fbbf24"></div><div class="mock-dot" style="background:#34d399"></div></div><div class="mock-title">Performance Dashboard</div></div>
+        <div class="mock-body">
+          <div class="kpi-row"><div class="kpi"><div class="kpi-l">OKR Progress</div><div class="kpi-v">82%</div><div class="kpi-d d-g">On target</div></div><div class="kpi"><div class="kpi-l">Skills Gap</div><div class="kpi-v">Low</div><div class="kpi-d d-g">3 IDPs active</div></div><div class="kpi"><div class="kpi-l">Feedback</div><div class="kpi-v">4.6</div><div class="kpi-d d-g">360 avg</div></div></div>
+          <div class="prog-block"><div class="pb-head"><span class="pb-lbl">Team Goal: Increase ARR</span><span class="pb-pct">74%</span></div><div class="pb-track"><div class="pb-fill" style="width:74%"></div></div></div>
+          <div class="prog-block"><div class="pb-head"><span class="pb-lbl">Individual: Certification Complete</span><span class="pb-pct">100%</span></div><div class="pb-track"><div class="pb-fill pb-fill-g" style="width:100%"></div></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div></section>
+
+<!-- HOW IT WORKS -->
+<section><div class="container">
+  <div class="sh reveal"><div class="pill"><span class="pill-dot"></span>How It Works</div><h2>Four simple steps to transform your workflows</h2></div>
+  <div class="steps">
+    <div class="step"><span class="step-n">01</span><h3>Connect Your Systems</h3><p>SLM automatically pulls relevant context from your existing tools and data sources.</p><div class="step-arr">&#8594;</div></div>
+    <div class="step"><span class="step-n">02</span><h3>One Screen for All</h3><p>Your team receives tasks, forms, approvals, and updates in one place — no switching needed.</p><div class="step-arr">&#8594;</div></div>
+    <div class="step"><span class="step-n">03</span><h3>SLM Automates Work</h3><p>Users respond in plain language. SLM fills forms, updates records, and syncs data back automatically.</p><div class="step-arr">&#8594;</div></div>
+    <div class="step"><span class="step-n">04</span><h3>Performance Flows Up</h3><p>KPIs update in real time as employees complete actions. Leaders get instant visibility.</p></div>
+  </div>
+</div></section>
+
+<!-- STATS -->
+<section style="background:var(--surface);border-top:1px solid var(--border);border-bottom:1px solid var(--border)"><div class="container">
+  <div class="sh reveal"><div class="pill"><span class="pill-dot"></span>The Impact</div><h2>Measurable results from Day 1</h2></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-n">90%</div><div class="stat-d">Less manual<br>data entry</div></div>
+    <div class="stat"><div class="stat-n">70%</div><div class="stat-d">Faster go-live vs<br>ERP upgrades</div></div>
+    <div class="stat"><div class="stat-n">85%</div><div class="stat-d">User adoption<br>within 30 days</div></div>
+    <div class="stat"><div class="stat-n">40%</div><div class="stat-d">Increase in measurable<br>team performance</div></div>
+  </div>
+  <p style="text-align:center;font-size:.92rem;margin-top:28px;color:var(--text2)">noERP is not an ERP. It is the next generation of enterprise execution.</p>
+</div></section>
+
+<!-- TESTIMONIALS -->
+<section><div class="container">
+  <div class="sh reveal"><div class="pill"><span class="pill-dot"></span>What Customers Say</div><h2>Trusted by teams worldwide</h2></div>
+  <div class="testi-grid">
+    <div class="testi"><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="testi-q">"noERP helped us eliminate 80% of the data entry our sales team was handling. We finally get clean data and better performance across the board."</div><div class="testi-auth"><div class="auth-av" style="background:linear-gradient(135deg,#2563eb,#1d4ed8)">CR</div><div><div class="auth-name">Chief Revenue Officer</div><div class="auth-role">SaaS Enterprise</div></div></div></div>
+    <div class="testi"><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="testi-q">"The single-screen interface is brilliant. Adoption was instant — our teams loved it from day one."</div><div class="testi-auth"><div class="auth-av" style="background:linear-gradient(135deg,#059669,#0d9488)">HH</div><div><div class="auth-name">Head of HR</div><div class="auth-role">Global Retail Company</div></div></div></div>
+    <div class="testi"><div class="stars">&#9733;&#9733;&#9733;&#9733;&#9733;</div><div class="testi-q">"We replaced 5 different tools with noERP. Implementation took weeks, not months. Our IT overhead dropped by 60%."</div><div class="testi-auth"><div class="auth-av" style="background:linear-gradient(135deg,#7c3aed,#6d28d9)">CT</div><div><div class="auth-name">CTO</div><div class="auth-role">Mid-Market Technology</div></div></div></div>
+  </div>
+</div></section>
+
+<!-- HOME CTA -->
+<section><div class="container">
+  <div class="cta-block"><h2>Experience noERP Today</h2><p>We would love to show you how SLM-powered simplicity can transform your organization.</p><div class="cta-btns"><button class="btn btn-white btn-lg" data-action="go:demo">Book a Demo &#8594;</button><button class="btn btn-outline-w btn-lg" data-action="go:modules">Explore Features</button></div></div>
+</div></section>
+</div>
+<!-- MODULES -->
+<div id="page-modules" class="page">
+<section style="padding:72px 0 44px"><div class="container">
+  <div class="sh"><div class="pill"><span class="pill-dot"></span>Platform Features</div><h2>Everything your organization needs, thoughtfully integrated</h2><p>Six powerful feature suites working together on a single intelligent surface. Each one designed to help your teams perform at their best.</p></div>
+  <div class="mod-tabs">
+    <span class="m-tab on" data-action="swMod:ai"><span class="m-ico iw-blue"><svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M12 2a7 7 0 017 7c0 2.5-1.3 4.7-3.3 6L15 21H9l-.7-6A7 7 0 0112 2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>AI Platform</span>
+    <span class="m-tab" data-action="swMod:perf"><span class="m-ico iw-amber"><svg width="13" height="13" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.8"/><path d="M12 8v4l3 3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>Performance</span>
+    <span class="m-tab" data-action="swMod:analytics"><span class="m-ico iw-amber"><svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M3 3v18h18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M7 16l4-4 4 4 4-4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>People Analytics</span>
+    <span class="m-tab" data-action="swMod:hris"><span class="m-ico iw-green"><svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="currentColor" stroke-width="1.8"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.8"/></svg></span>HRIS</span>
+    <span class="m-tab" data-action="swMod:fin"><span class="m-ico iw-purple"><svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>Power ERP</span>
+    <span class="m-tab" data-action="swMod:clm"><span class="m-ico iw-rose"><svg width="13" height="13" fill="none" viewBox="0 0 24 24"><path d="M9 12h6M17 21H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v11a2 2 0 01-2 2z" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>CLM</span>
+  </div>
+
+  <!-- AI PLATFORM -->
+  <div id="mod-ai" class="mod-pane on">
+    <div class="mod-hero"><div><h2>Native AI Automation &amp; Single Screen UI</h2><p style="margin-top:12px">Our AI platform brings together native automation, in-built MCP, and a conversational chat engine — all accessible from a single, intuitive screen. It connects seamlessly with your system of work to automate goals, tasks, feedback, and more.</p><div class="ftags"><span class="ftag">Native AI &amp; MCP</span><span class="ftag">System of Work Integrations</span><span class="ftag">Conversational Chat</span><span class="ftag">Single Screen UI</span><span class="ftag">Mobile &amp; Desktop Apps</span><span class="ftag">SSO Authentication</span></div></div>
+    <div class="mod-illus" style="background:linear-gradient(135deg,#f0f5ff 0%,#e8f0fe 100%);padding:28px;text-align:center;border:1px solid rgba(37,99,235,.1);border-radius:var(--r2)"><svg width="320" height="200" viewBox="0 0 320 200" fill="none">
+      <rect x="20" y="8" width="280" height="175" rx="14" fill="#fff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadow1)"/>
+      <defs><filter id="shadow1" x="-4" y="-2" width="308" height="195" filterUnits="userSpaceOnUse"><feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#2563eb" flood-opacity=".08"/></filter></defs>
+      <rect x="20" y="8" width="280" height="28" rx="14" fill="#0f172a"/><rect x="20" y="28" width="280" height="8" fill="#0f172a"/>
+      <circle cx="36" cy="22" r="4" fill="#f87171" opacity=".8"/><circle cx="48" cy="22" r="4" fill="#fbbf24" opacity=".8"/><circle cx="60" cy="22" r="4" fill="#34d399" opacity=".8"/>
+      <text x="160" y="26" text-anchor="middle" font-size="7.5" fill="rgba(255,255,255,.5)" font-family="Plus Jakarta Sans,sans-serif" font-weight="500">noERP — Single Workspace</text>
+      <rect x="32" y="46" width="80" height="52" rx="8" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+      <circle cx="50" cy="62" r="8" fill="#dbeafe"/><path d="M47 62l2 2 4-4" stroke="#2563eb" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="72" y="60" text-anchor="middle" font-size="6.5" fill="#2563eb" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">Goals</text>
+      <rect x="40" y="74" width="60" height="4" rx="2" fill="#bfdbfe"/><rect x="40" y="74" width="42" height="4" rx="2" fill="#2563eb"/>
+      <text x="72" y="90" text-anchor="middle" font-size="5.5" fill="#64748b">3 OKRs on track</text>
+      <rect x="120" y="46" width="80" height="52" rx="8" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+      <circle cx="138" cy="62" r="8" fill="#dcfce7"/><path d="M134 62h8M138 58v8" stroke="#059669" stroke-width="1.5" stroke-linecap="round"/>
+      <text x="160" y="60" text-anchor="middle" font-size="6.5" fill="#059669" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">People</text>
+      <rect x="128" y="74" width="60" height="4" rx="2" fill="#bbf7d0"/><rect x="128" y="74" width="48" height="4" rx="2" fill="#059669"/>
+      <text x="160" y="90" text-anchor="middle" font-size="5.5" fill="#64748b">142 active employees</text>
+      <rect x="208" y="46" width="80" height="52" rx="8" fill="#fefce8" stroke="#fde68a" stroke-width="1"/>
+      <circle cx="226" cy="62" r="8" fill="#fef3c7"/><text x="226" y="65" text-anchor="middle" font-size="9" fill="#d97706">$</text>
+      <text x="248" y="60" text-anchor="middle" font-size="6.5" fill="#ca8a04" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">Finance</text>
+      <rect x="216" y="74" width="60" height="4" rx="2" fill="#fde68a"/><rect x="216" y="74" width="38" height="4" rx="2" fill="#d97706"/>
+      <text x="248" y="90" text-anchor="middle" font-size="5.5" fill="#64748b">AP/AR real-time</text>
+      <rect x="32" y="108" width="256" height="56" rx="10" fill="linear-gradient(90deg,#f8fafc,#eff6ff)" stroke="#e2e8f0" stroke-width="1"/>
+      <circle cx="56" cy="136" r="14" fill="#2563eb" opacity=".12"/><circle cx="56" cy="136" r="9" fill="#2563eb"/>
+      <path d="M52 136l3 3 5-5" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="78" y="128" font-size="6" fill="#94a3b8" font-family="Plus Jakarta Sans,sans-serif">AI Assistant</text>
+      <text x="78" y="140" font-size="7.5" fill="#1e293b" font-family="Plus Jakarta Sans,sans-serif" font-weight="600">How can I help you today?</text>
+      <rect x="220" y="126" width="56" height="22" rx="7" fill="#2563eb"/><text x="248" y="140" text-anchor="middle" font-size="7" fill="#fff" font-weight="600">Ask AI</text>
+      <text x="160" y="192" text-anchor="middle" font-size="8" fill="#94a3b8" font-family="Plus Jakarta Sans,sans-serif">One Screen. One Brain. Zero ERP Fatigue.</text>
+    </svg></div></div>
+    <div class="g3">
+      <div class="card"><div class="iw iw-blue"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M12 2a7 7 0 017 7c0 2.5-1.3 4.7-3.3 6L15 21H9l-.7-6A7 7 0 0112 2z" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Native AI &amp; In-built MCP</h3><p>AI-powered automation with Model Context Protocol for intelligent data extraction and workflow management across your entire ecosystem.</p></div>
+      <div class="card"><div class="iw iw-blue"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>System of Work Integrations</h3><p>Connects with your chat, email, CRM, finance, and HR modules to automate goals, initiatives, tasks, and feedback effortlessly.</p></div>
+      <div class="card"><div class="iw iw-blue"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Conversational Chat Engine</h3><p>Interact with noERP using natural language. The agile chat interface understands context and completes tasks on your behalf.</p></div>
+      <div class="card"><div class="iw iw-blue"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><rect x="5" y="2" width="14" height="20" rx="2" stroke="#2563eb" stroke-width="1.8"/><path d="M12 18h.01" stroke="#2563eb" stroke-width="2" stroke-linecap="round"/></svg></div><h3>Mobile &amp; Desktop Apps</h3><p>Available on Android, iOS, and desktop so your teams can stay productive from any device, anywhere.</p></div>
+      <div class="card"><div class="iw iw-blue"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>SSO &amp; Secure Authentication</h3><p>SSO-enabled with email domain-driven authentication. Enterprise-grade security that keeps access simple and safe.</p></div>
+      <div class="card"><div class="iw iw-blue"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" stroke="#2563eb" stroke-width="1.8"/><path d="M8 21h8M12 17v4" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Single Screen Interface</h3><p>All your forms, approvals, notifications, tasks, and workflows on one intelligent surface. No modules. No navigation complexity.</p></div>
+    </div>
+  </div>
+  <!-- PERFORMANCE -->
+  <div id="mod-perf" class="mod-pane">
+    <div class="mod-hero"><div><h2>Performance Management</h2><p style="margin-top:12px">A comprehensive performance suite covering skills development, continuous feedback, agile goals, appraisals, and everything in between — all designed to help your people grow and your organization thrive.</p><div class="ftags"><span class="ftag">Skills &amp; IDP</span><span class="ftag">Feedback 360</span><span class="ftag">OKR / BSC</span><span class="ftag">Agile Goals</span><span class="ftag">Check-Ins</span><span class="ftag">Appraisals</span><span class="ftag">Normalization</span><span class="ftag">Letters</span></div></div>
+    <div class="mod-illus" style="background:linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%);padding:28px;text-align:center;border:1px solid rgba(217,119,6,.1);border-radius:var(--r2)"><svg width="320" height="190" viewBox="0 0 320 190" fill="none">
+      <rect x="10" y="8" width="140" height="80" rx="10" fill="#fff" stroke="#fde68a" stroke-width="1.5" filter="url(#sh2)"/>
+      <defs><filter id="sh2" x="-4" y="0" width="168" height="100" filterUnits="userSpaceOnUse"><feDropShadow dx="0" dy="3" stdDeviation="6" flood-color="#d97706" flood-opacity=".08"/></filter></defs>
+      <text x="80" y="28" text-anchor="middle" font-size="7.5" fill="#d97706" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">OKR Dashboard</text>
+      <text x="32" y="46" font-size="6" fill="#64748b" font-family="Plus Jakarta Sans,sans-serif">Revenue Growth</text>
+      <rect x="22" y="50" width="116" height="6" rx="3" fill="#fef3c7"/><rect x="22" y="50" width="82" height="6" rx="3" fill="#d97706"/>
+      <text x="138" y="55" font-size="5.5" fill="#d97706" font-weight="600">70%</text>
+      <text x="32" y="68" font-size="6" fill="#64748b" font-family="Plus Jakarta Sans,sans-serif">Team Velocity</text>
+      <rect x="22" y="72" width="116" height="6" rx="3" fill="#fef3c7"/><rect x="22" y="72" width="99" height="6" rx="3" fill="#f59e0b"/>
+      <text x="138" y="77" font-size="5.5" fill="#f59e0b" font-weight="600">85%</text>
+      <rect x="170" y="8" width="140" height="80" rx="10" fill="#fff" stroke="#bbf7d0" stroke-width="1.5"/>
+      <text x="240" y="28" text-anchor="middle" font-size="7.5" fill="#059669" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">360 Feedback</text>
+      <circle cx="240" cy="56" r="20" fill="none" stroke="#dcfce7" stroke-width="5"/><circle cx="240" cy="56" r="20" fill="none" stroke="#059669" stroke-width="5" stroke-dasharray="115" stroke-dashoffset="23" stroke-linecap="round" transform="rotate(-90 240 56)"/>
+      <text x="240" y="60" text-anchor="middle" font-size="14" fill="#059669" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">4.6</text>
+      <text x="240" y="70" text-anchor="middle" font-size="5.5" fill="#64748b">/5.0 avg score</text>
+      <rect x="30" y="98" width="260" height="72" rx="10" fill="#fff" stroke="#bfdbfe" stroke-width="1.5"/>
+      <text x="160" y="118" text-anchor="middle" font-size="7.5" fill="#2563eb" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">Skills &amp; Development</text>
+      <rect x="48" y="128" width="28" height="28" rx="6" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1"/>
+      <text x="62" y="146" text-anchor="middle" font-size="6" fill="#2563eb" font-weight="600">Lead</text>
+      <rect x="84" y="128" width="28" height="28" rx="6" fill="#f0fdf4" stroke="#bbf7d0" stroke-width="1"/>
+      <text x="98" y="146" text-anchor="middle" font-size="6" fill="#059669" font-weight="600">Tech</text>
+      <rect x="120" y="128" width="28" height="28" rx="6" fill="#fefce8" stroke="#fde68a" stroke-width="1"/>
+      <text x="134" y="146" text-anchor="middle" font-size="6" fill="#d97706" font-weight="600">Comm</text>
+      <rect x="156" y="128" width="28" height="28" rx="6" fill="#fdf2f8" stroke="#fbcfe8" stroke-width="1"/>
+      <text x="170" y="146" text-anchor="middle" font-size="6" fill="#db2777" font-weight="600">Agile</text>
+      <text x="220" y="140" font-size="6" fill="#64748b" font-family="Plus Jakarta Sans,sans-serif">3 IDPs active</text>
+      <text x="220" y="152" font-size="6" fill="#64748b" font-family="Plus Jakarta Sans,sans-serif">12 skills tracked</text>
+      <text x="160" y="184" text-anchor="middle" font-size="7.5" fill="#94a3b8" font-family="Plus Jakarta Sans,sans-serif">Goals. Feedback. Growth. All Connected.</text>
+    </svg></div></div>
+    <div class="g3">
+      <div class="card"><div class="iw iw-amber"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M12 2a7 7 0 017 7c0 2.5-1.3 4.7-3.3 6L15 21H9l-.7-6A7 7 0 0112 2z" stroke="#d97706" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Skills, Continuous Feedback &amp; IDP</h3><p>Automate or upload custom skill libraries — functional, behavioral, and values-based. Link skills to Individual Development Plans for meaningful growth.</p></div>
+      <div class="card"><div class="iw iw-amber"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#d97706" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>1-1 Snapshots &amp; Check-Ins</h3><p>Structured one-on-one meetings with context-rich snapshots that capture progress, blockers, and action items automatically.</p></div>
+      <div class="card"><div class="iw iw-amber"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#d97706" stroke-width="1.8"/><circle cx="9" cy="7" r="4" stroke="#d97706" stroke-width="1.8"/><path d="M23 21v-2a4 4 0 00-3-3.87" stroke="#d97706" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Feedback 360</h3><p>Collect comprehensive feedback from peers, managers, and direct reports. AI-assisted summaries highlight themes and growth areas.</p></div>
+      <div class="card"><div class="iw iw-amber"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M3 3v18h18" stroke="#d97706" stroke-width="1.8" stroke-linecap="round"/><path d="M7 16l4-4 4 4 4-4" stroke="#d97706" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Strategy &amp; Agile Goals</h3><p>Define strategy, prioritize organizational KPIs. Support for BSC/OKR frameworks with agile goal periods, monthly or weekly task sub-periods.</p></div>
+      <div class="card"><div class="iw iw-amber"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#d97706" stroke-width="1.8"/><path d="M12 8v4l3 3" stroke="#d97706" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Goal Management</h3><p>Weigh individual goals, cascade or add goals by manager or mentee. Include IDPs into goals with forward planning beyond the current period.</p></div>
+      <div class="card"><div class="iw iw-amber"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke="#d97706" stroke-width="1.8" stroke-linecap="round"/><path d="M22 4L12 14.01l-3-3" stroke="#d97706" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Appraisals &amp; Normalization</h3><p>Complete review cycles with differentiated rating scales, normalization across teams, and automated letter generation.</p></div>
+    </div>
+  </div>
+
+  <!-- PEOPLE ANALYTICS -->
+  <div id="mod-analytics" class="mod-pane">
+    <div class="mod-hero"><div><h2>People Analytics Module</h2><p style="margin-top:12px">Built-in analytics that give leaders real-time visibility into organizational health, team performance, and individual potential — no external BI tools needed.</p><div class="ftags"><span class="ftag">CEO Reporting</span><span class="ftag">Org Charts</span><span class="ftag">Heat Maps</span><span class="ftag">9-Box</span><span class="ftag">Resource Summaries</span></div></div>
+    <div class="mod-illus" style="background:linear-gradient(135deg,#fefce8 0%,#fff7ed 100%);padding:28px;text-align:center;border:1px solid rgba(217,119,6,.1);border-radius:var(--r2)"><svg width="320" height="190" viewBox="0 0 320 190" fill="none">
+      <rect x="10" y="8" width="140" height="82" rx="10" fill="#fff" stroke="#fde68a" stroke-width="1.5"/>
+      <text x="80" y="26" text-anchor="middle" font-size="7.5" fill="#d97706" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">9-Box Matrix</text>
+      <rect x="22" y="34" width="22" height="16" rx="3" fill="#fef3c7" stroke="#fde68a" stroke-width=".8"/><circle cx="33" cy="42" r="3" fill="#d97706" opacity=".4"/>
+      <rect x="48" y="34" width="22" height="16" rx="3" fill="#dcfce7" stroke="#bbf7d0" stroke-width=".8"/><circle cx="59" cy="42" r="3" fill="#059669" opacity=".5"/><circle cx="55" cy="40" r="2" fill="#059669" opacity=".3"/>
+      <rect x="74" y="34" width="22" height="16" rx="3" fill="#dcfce7" stroke="#86efac" stroke-width=".8"/><circle cx="85" cy="42" r="3" fill="#059669" opacity=".7"/><circle cx="81" cy="40" r="2.5" fill="#059669" opacity=".5"/><circle cx="88" cy="39" r="2" fill="#059669" opacity=".4"/>
+      <rect x="22" y="54" width="22" height="16" rx="3" fill="#fee2e2" stroke="#fecaca" stroke-width=".8"/><circle cx="33" cy="62" r="2.5" fill="#ef4444" opacity=".4"/>
+      <rect x="48" y="54" width="22" height="16" rx="3" fill="#fef3c7" stroke="#fde68a" stroke-width=".8"/><circle cx="59" cy="62" r="3" fill="#d97706" opacity=".4"/>
+      <rect x="74" y="54" width="22" height="16" rx="3" fill="#dcfce7" stroke="#bbf7d0" stroke-width=".8"/><circle cx="85" cy="62" r="3" fill="#059669" opacity=".5"/>
+      <text x="24" y="82" font-size="5" fill="#94a3b8" font-family="Plus Jakarta Sans,sans-serif">Low</text>
+      <text x="80" y="82" font-size="5" fill="#94a3b8" font-family="Plus Jakarta Sans,sans-serif">High</text>
+      <text x="105" y="50" font-size="5" fill="#94a3b8" font-family="Plus Jakarta Sans,sans-serif" transform="rotate(-90 105 50)">Potential</text>
+      <rect x="170" y="8" width="140" height="82" rx="10" fill="#fff" stroke="#bfdbfe" stroke-width="1.5"/>
+      <text x="240" y="26" text-anchor="middle" font-size="7.5" fill="#2563eb" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">CEO Dashboard</text>
+      <rect x="182" y="36" width="28" height="40" rx="4" fill="#eff6ff"/><rect x="182" y="52" width="28" height="24" rx="0" fill="#2563eb" opacity=".2"/><rect x="182" y="60" width="28" height="16" rx="0" fill="#2563eb" opacity=".5"/>
+      <rect x="214" y="36" width="28" height="40" rx="4" fill="#f0fdf4"/><rect x="214" y="46" width="28" height="30" rx="0" fill="#059669" opacity=".2"/><rect x="214" y="56" width="28" height="20" rx="0" fill="#059669" opacity=".5"/>
+      <rect x="246" y="36" width="28" height="40" rx="4" fill="#fefce8"/><rect x="246" y="42" width="28" height="34" rx="0" fill="#d97706" opacity=".2"/><rect x="246" y="54" width="28" height="22" rx="0" fill="#d97706" opacity=".5"/>
+      <rect x="278" y="36" width="28" height="40" rx="4" fill="#fdf2f8"/><rect x="278" y="50" width="28" height="26" rx="0" fill="#db2777" opacity=".2"/><rect x="278" y="58" width="28" height="18" rx="0" fill="#db2777" opacity=".5"/>
+      <text x="196" y="84" text-anchor="middle" font-size="5" fill="#64748b">Eng</text>
+      <text x="228" y="84" text-anchor="middle" font-size="5" fill="#64748b">Sales</text>
+      <text x="260" y="84" text-anchor="middle" font-size="5" fill="#64748b">Ops</text>
+      <text x="292" y="84" text-anchor="middle" font-size="5" fill="#64748b">Mktg</text>
+      <rect x="30" y="100" width="260" height="68" rx="10" fill="#fff" stroke="#bbf7d0" stroke-width="1.5"/>
+      <text x="160" y="118" text-anchor="middle" font-size="7.5" fill="#059669" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">Org Heat Map</text>
+      <rect x="48" y="128" width="48" height="28" rx="5" fill="#059669" opacity=".7"/><text x="72" y="146" text-anchor="middle" font-size="6" fill="#fff" font-weight="600">Engineering</text>
+      <rect x="100" y="128" width="48" height="28" rx="5" fill="#059669" opacity=".5"/><text x="124" y="146" text-anchor="middle" font-size="6" fill="#fff" font-weight="600">Design</text>
+      <rect x="152" y="128" width="48" height="28" rx="5" fill="#d97706" opacity=".5"/><text x="176" y="146" text-anchor="middle" font-size="6" fill="#fff" font-weight="600">Sales</text>
+      <rect x="204" y="128" width="48" height="28" rx="5" fill="#059669" opacity=".3"/><text x="228" y="146" text-anchor="middle" font-size="6" fill="#fff" font-weight="600">Support</text>
+      <text x="160" y="184" text-anchor="middle" font-size="7.5" fill="#94a3b8" font-family="Plus Jakarta Sans,sans-serif">Insights by Department, Team &amp; Goals</text>
+    </svg></div></div>
+    <div class="g2">
+      <div class="card"><div class="iw iw-amber"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M3 3v18h18" stroke="#d97706" stroke-width="1.8" stroke-linecap="round"/><path d="M7 16l4-4 4 4 4-4" stroke="#d97706" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>CEO Reporting</h3><p>Comprehensive reporting by department, teams, and each annual goal with quarterly progress tracking for complete organizational visibility.</p></div>
+      <div class="card"><div class="iw iw-amber"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#d97706" stroke-width="1.8"/><circle cx="9" cy="7" r="4" stroke="#d97706" stroke-width="1.8"/></svg></div><h3>Org Charts &amp; Heat Maps</h3><p>Visual organization charts with performance heat maps to quickly identify high performers and areas needing attention.</p></div>
+      <div class="card"><div class="iw iw-amber"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#d97706" stroke-width="1.8"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18" stroke="#d97706" stroke-width="1" opacity=".4"/></svg></div><h3>9-Box Matrix</h3><p>Auto-populated performance-potential grid with drag-and-drop calibration and full audit history for fair, transparent talent decisions.</p></div>
+      <div class="card"><div class="iw iw-amber"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M9 12h6M9 16h6M17 21H7a2 2 0 01-2-2V5a2 2 0 012-2h5l5 5v11a2 2 0 01-2 2z" stroke="#d97706" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Single Page Resource Summaries</h3><p>One-page employee summaries combining performance, skills, goals, feedback, and development data for quick, informed decisions.</p></div>
+    </div>
+  </div>
+  <!-- HRIS -->
+  <div id="mod-hris" class="mod-pane">
+    <div class="mod-hero"><div><h2>HRIS — Human Resource Information System</h2><p style="margin-top:12px">A complete HRIS suite covering the entire employee lifecycle — from onboarding to offboarding, attendance to payroll, all in one place with self-service capabilities your team will appreciate.</p><div class="ftags"><span class="ftag">Employee Master</span><span class="ftag">Attendance &amp; Shifts</span><span class="ftag">Leave</span><span class="ftag">Payroll</span><span class="ftag">Compliance</span><span class="ftag">ESS</span><span class="ftag">Approvals</span><span class="ftag">Reports</span><span class="ftag">Audit &amp; Security</span></div></div>
+    <div class="mod-illus" style="background:linear-gradient(135deg,#ecfdf5 0%,#f0fdf4 100%);padding:28px;text-align:center;border:1px solid rgba(5,150,105,.1);border-radius:var(--r2)"><svg width="320" height="190" viewBox="0 0 320 190" fill="none">
+      <rect x="30" y="8" width="260" height="38" rx="10" fill="#fff" stroke="#bbf7d0" stroke-width="1.5"/>
+      <text x="160" y="32" text-anchor="middle" font-size="8" fill="#059669" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">Employee Lifecycle Management</text>
+      <line x1="60" y1="46" x2="60" y2="56" stroke="#bbf7d0" stroke-width="1.5"/>
+      <line x1="160" y1="46" x2="160" y2="56" stroke="#bbf7d0" stroke-width="1.5"/>
+      <line x1="260" y1="46" x2="260" y2="56" stroke="#bbf7d0" stroke-width="1.5"/>
+      <rect x="20" y="56" width="80" height="50" rx="8" fill="#fff" stroke="#bbf7d0" stroke-width="1.2"/>
+      <circle cx="60" cy="72" r="10" fill="#dcfce7"/><path d="M56 72l3 3 5-5" stroke="#059669" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="60" y="94" text-anchor="middle" font-size="7" fill="#059669" font-weight="600" font-family="Plus Jakarta Sans,sans-serif">Attendance</text>
+      <rect x="120" y="56" width="80" height="50" rx="8" fill="#fff" stroke="#bbf7d0" stroke-width="1.2"/>
+      <circle cx="160" cy="72" r="10" fill="#dcfce7"/><rect x="154" y="66" width="12" height="12" rx="2" fill="none" stroke="#059669" stroke-width="1.3"/><path d="M158 68v4l2 2" stroke="#059669" stroke-width="1.2" stroke-linecap="round"/>
+      <text x="160" y="94" text-anchor="middle" font-size="7" fill="#059669" font-weight="600" font-family="Plus Jakarta Sans,sans-serif">Leave</text>
+      <rect x="220" y="56" width="80" height="50" rx="8" fill="#fff" stroke="#bbf7d0" stroke-width="1.2"/>
+      <circle cx="260" cy="72" r="10" fill="#dcfce7"/><text x="260" y="76" text-anchor="middle" font-size="10" fill="#059669" font-weight="700">$</text>
+      <text x="260" y="94" text-anchor="middle" font-size="7" fill="#059669" font-weight="600" font-family="Plus Jakarta Sans,sans-serif">Payroll</text>
+      <line x1="60" y1="106" x2="60" y2="120" stroke="#bbf7d0" stroke-width="1.5"/>
+      <line x1="160" y1="106" x2="160" y2="120" stroke="#bbf7d0" stroke-width="1.5"/>
+      <line x1="260" y1="106" x2="260" y2="120" stroke="#bbf7d0" stroke-width="1.5"/>
+      <line x1="60" y1="120" x2="260" y2="120" stroke="#bbf7d0" stroke-width="1.5"/>
+      <line x1="160" y1="120" x2="160" y2="130" stroke="#059669" stroke-width="1.5"/>
+      <rect x="60" y="130" width="200" height="38" rx="8" fill="#fff" stroke="#059669" stroke-width="1.5"/>
+      <circle cx="84" cy="149" r="8" fill="#dcfce7"/><path d="M80 149h8M84 145v8" stroke="#059669" stroke-width="1.3" stroke-linecap="round"/>
+      <text x="170" y="146" text-anchor="middle" font-size="7.5" fill="#059669" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">Self-Service &amp; Approvals</text>
+      <text x="170" y="158" text-anchor="middle" font-size="6" fill="#64748b" font-family="Plus Jakarta Sans,sans-serif">Empower teams to manage their own HR needs</text>
+      <text x="160" y="184" text-anchor="middle" font-size="7.5" fill="#94a3b8" font-family="Plus Jakarta Sans,sans-serif">Hire to Retire. All in One Place.</text>
+    </svg></div></div>
+    <div class="g3">
+      <div class="card"><div class="iw iw-green"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#059669" stroke-width="1.8"/><circle cx="9" cy="7" r="4" stroke="#059669" stroke-width="1.8"/></svg></div><h3>Employee Master &amp; Lifecycle</h3><p>Complete employee records management from hire to retire, with automated lifecycle events and document management.</p></div>
+      <div class="card"><div class="iw iw-green"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke="#059669" stroke-width="1.8"/><path d="M12 8v4l3 3" stroke="#059669" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Attendance &amp; Shift Management</h3><p>Flexible shift scheduling, real-time attendance tracking, and automated overtime calculations with compliance safeguards.</p></div>
+      <div class="card"><div class="iw iw-green"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2" stroke="#059669" stroke-width="1.8"/><path d="M16 2v4M8 2v4M3 10h18" stroke="#059669" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Leave Management</h3><p>Configurable leave policies, automated accruals, and a self-service portal that makes requesting and approving leave simple.</p></div>
+      <div class="card"><div class="iw iw-green"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" stroke="#059669" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Payroll Management</h3><p>End-to-end payroll processing with multi-currency support, tax calculations, and seamless integration with your finance systems.</p></div>
+      <div class="card"><div class="iw iw-green"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#059669" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Statutory &amp; Compliance</h3><p>Built-in compliance support for local labor laws, tax regulations, and statutory requirements across multiple jurisdictions.</p></div>
+      <div class="card"><div class="iw iw-green"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2" stroke="#059669" stroke-width="1.8"/><circle cx="12" cy="7" r="4" stroke="#059669" stroke-width="1.8"/></svg></div><h3>Employee Self-Service</h3><p>Empower employees to manage their own profiles, payslips, leave requests, and documents without HR intervention.</p></div>
+      <div class="card"><div class="iw iw-green"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke="#059669" stroke-width="1.8" stroke-linecap="round"/><path d="M22 4L12 14.01l-3-3" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Approval Workflows &amp; Governance</h3><p>Configurable multi-level approval chains with delegation, escalation, and complete audit trails for governance.</p></div>
+      <div class="card"><div class="iw iw-green"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M3 3v18h18" stroke="#059669" stroke-width="1.8" stroke-linecap="round"/><rect x="7" y="10" width="3" height="8" rx="1" fill="#059669" opacity=".3"/><rect x="12" y="6" width="3" height="12" rx="1" fill="#059669" opacity=".5"/><rect x="17" y="8" width="3" height="10" rx="1" fill="#059669" opacity=".7"/></svg></div><h3>Reports, Dashboards &amp; Integrations</h3><p>Pre-built and customizable reports, real-time dashboards, plus extensibility through APIs and native integrations.</p></div>
+      <div class="card"><div class="iw iw-green"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" stroke="#059669" stroke-width="1.8"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="#059669" stroke-width="1.8"/></svg></div><h3>Audit, Security &amp; Controls</h3><p>Comprehensive audit logging, role-based access, and data security controls to protect sensitive employee information.</p></div>
+    </div>
+  </div>
+
+  <!-- POWER ERP - FINANCE -->
+  <div id="mod-fin" class="mod-pane">
+    <div class="mod-hero"><div><h2>Power ERP — Finance &amp; Purchases</h2><p style="margin-top:12px">Streamline your financial operations with intelligent automation. From journal entries to vendor management, everything your finance team needs to work more efficiently and accurately.</p><div class="ftags"><span class="ftag">Approval Workflows</span><span class="ftag">Journals</span><span class="ftag">AP &amp; AR</span><span class="ftag">Vendor Management</span><span class="ftag">Inventory</span><span class="ftag">Tax Config</span><span class="ftag">Financial Reports</span></div></div>
+    <div class="mod-illus" style="background:linear-gradient(135deg,#f5f3ff 0%,#ede9fe 100%);padding:28px;text-align:center;border:1px solid rgba(124,58,237,.1);border-radius:var(--r2)"><svg width="320" height="190" viewBox="0 0 320 190" fill="none">
+      <rect x="10" y="8" width="140" height="82" rx="10" fill="#fff" stroke="#ddd6fe" stroke-width="1.5"/>
+      <text x="80" y="28" text-anchor="middle" font-size="7.5" fill="#7c3aed" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">Accounts Payable / Receivable</text>
+      <rect x="22" y="38" width="56" height="18" rx="5" fill="#f5f3ff" stroke="#ddd6fe" stroke-width=".8"/>
+      <text x="50" y="50" text-anchor="middle" font-size="6" fill="#7c3aed" font-weight="600">AP: $42.5K</text>
+      <rect x="82" y="38" width="56" height="18" rx="5" fill="#ecfdf5" stroke="#bbf7d0" stroke-width=".8"/>
+      <text x="110" y="50" text-anchor="middle" font-size="6" fill="#059669" font-weight="600">AR: $68.2K</text>
+      <rect x="22" y="62" width="116" height="6" rx="3" fill="#ede9fe"/><rect x="22" y="62" width="76" height="6" rx="3" fill="#7c3aed" opacity=".6"/>
+      <text x="80" y="78" text-anchor="middle" font-size="5.5" fill="#64748b">78% collected this month</text>
+      <rect x="170" y="8" width="140" height="82" rx="10" fill="#fff" stroke="#ddd6fe" stroke-width="1.5"/>
+      <text x="240" y="28" text-anchor="middle" font-size="7.5" fill="#7c3aed" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">Journal Entries</text>
+      <rect x="182" y="38" width="116" height="10" rx="3" fill="#f8fafc" stroke="#e2e8f0" stroke-width=".5"/>
+      <circle cx="190" cy="43" r="3" fill="#7c3aed" opacity=".3"/><text x="200" y="45" font-size="5" fill="#334155">INV-2024-0384</text><text x="290" y="45" text-anchor="end" font-size="5" fill="#059669">+$2,400</text>
+      <rect x="182" y="52" width="116" height="10" rx="3" fill="#f8fafc" stroke="#e2e8f0" stroke-width=".5"/>
+      <circle cx="190" cy="57" r="3" fill="#7c3aed" opacity=".3"/><text x="200" y="59" font-size="5" fill="#334155">PO-2024-0112</text><text x="290" y="59" text-anchor="end" font-size="5" fill="#ef4444">-$890</text>
+      <rect x="182" y="66" width="116" height="10" rx="3" fill="#f8fafc" stroke="#e2e8f0" stroke-width=".5"/>
+      <circle cx="190" cy="71" r="3" fill="#7c3aed" opacity=".3"/><text x="200" y="73" font-size="5" fill="#334155">SAL-2024-MAR</text><text x="290" y="73" text-anchor="end" font-size="5" fill="#ef4444">-$34,200</text>
+      <text x="240" y="85" text-anchor="middle" font-size="5" fill="#94a3b8">AI auto-categorized</text>
+      <rect x="30" y="100" width="260" height="68" rx="10" fill="#fff" stroke="#c4b5fd" stroke-width="1.5"/>
+      <text x="160" y="118" text-anchor="middle" font-size="7.5" fill="#7c3aed" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">Financial Reports &amp; Tax</text>
+      <rect x="50" y="126" width="32" height="32" rx="16" fill="#f5f3ff" stroke="#ddd6fe" stroke-width="1"/><text x="66" y="146" text-anchor="middle" font-size="7" fill="#7c3aed" font-weight="700">P&amp;L</text>
+      <rect x="94" y="126" width="32" height="32" rx="16" fill="#f5f3ff" stroke="#ddd6fe" stroke-width="1"/><text x="110" y="146" text-anchor="middle" font-size="7" fill="#7c3aed" font-weight="700">BS</text>
+      <rect x="138" y="126" width="32" height="32" rx="16" fill="#f5f3ff" stroke="#ddd6fe" stroke-width="1"/><text x="154" y="146" text-anchor="middle" font-size="7" fill="#7c3aed" font-weight="700">CF</text>
+      <rect x="182" y="126" width="32" height="32" rx="16" fill="#f5f3ff" stroke="#ddd6fe" stroke-width="1"/><text x="198" y="146" text-anchor="middle" font-size="7" fill="#7c3aed" font-weight="700">Tax</text>
+      <rect x="226" y="126" width="32" height="32" rx="16" fill="#f5f3ff" stroke="#ddd6fe" stroke-width="1"/><text x="242" y="146" text-anchor="middle" font-size="6" fill="#7c3aed" font-weight="700">Audit</text>
+      <text x="160" y="184" text-anchor="middle" font-size="7.5" fill="#94a3b8" font-family="Plus Jakarta Sans,sans-serif">Real-time. Automated. Compliant.</text>
+    </svg></div></div>
+    <div class="g3">
+      <div class="card"><div class="iw iw-purple"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke="#7c3aed" stroke-width="1.8" stroke-linecap="round"/><path d="M22 4L12 14.01l-3-3" stroke="#7c3aed" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Approval Workflows</h3><p>Multi-level financial approval chains with delegation, escalation, and audit trails for complete governance.</p></div>
+      <div class="card"><div class="iw iw-purple"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="#7c3aed" stroke-width="1.8"/><path d="M14 2v6h6" stroke="#7c3aed" stroke-width="1.8"/></svg></div><h3>Journal Management</h3><p>Automated journal entries with AI-assisted categorization. Manual overrides with full audit history.</p></div>
+      <div class="card"><div class="iw iw-purple"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6" stroke="#7c3aed" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Accounts Payable &amp; Receivable</h3><p>Streamlined AP/AR management with automated matching, aging reports, and payment scheduling.</p></div>
+      <div class="card"><div class="iw iw-purple"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2" stroke="#7c3aed" stroke-width="1.8"/><circle cx="9" cy="7" r="4" stroke="#7c3aed" stroke-width="1.8"/></svg></div><h3>Vendor Management</h3><p>Centralized vendor database with performance tracking, contract management, and automated payment workflows.</p></div>
+      <div class="card"><div class="iw iw-purple"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" stroke="#7c3aed" stroke-width="1.8"/><path d="M16 7V5a2 2 0 00-4 0v2" stroke="#7c3aed" stroke-width="1.8"/></svg></div><h3>Stock &amp; Inventory Integration</h3><p>Real-time inventory tracking with automated reorder points and seamless integration with procurement.</p></div>
+      <div class="card"><div class="iw iw-purple"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M3 3v18h18" stroke="#7c3aed" stroke-width="1.8" stroke-linecap="round"/><rect x="7" y="10" width="3" height="8" rx="1" fill="#7c3aed" opacity=".3"/><rect x="12" y="6" width="3" height="12" rx="1" fill="#7c3aed" opacity=".5"/><rect x="17" y="8" width="3" height="10" rx="1" fill="#7c3aed" opacity=".7"/></svg></div><h3>Tax &amp; Financial Reports</h3><p>Multi-jurisdiction tax configuration with automated compliance. Comprehensive financial reporting suite with real-time dashboards.</p></div>
+    </div>
+  </div>
+
+  <!-- CLM -->
+  <div id="mod-clm" class="mod-pane">
+    <div class="mod-hero"><div><h2>Contract Lifecycle Management</h2><p style="margin-top:12px">Manage your contracts from creation to completion with intelligent automation, digital signatures, and a centralized repository that keeps everything organized and accessible.</p><div class="ftags"><span class="ftag">Contract Automation</span><span class="ftag">Templates</span><span class="ftag">Digital Signatures</span><span class="ftag">Approvals</span><span class="ftag">Analytics</span><span class="ftag">Central Repository</span></div></div>
+    <div class="mod-illus" style="background:linear-gradient(135deg,#fff1f2 0%,#fdf2f8 100%);padding:28px;text-align:center;border:1px solid rgba(225,29,72,.1);border-radius:var(--r2)"><svg width="320" height="190" viewBox="0 0 320 190" fill="none">
+      <rect x="40" y="8" width="240" height="44" rx="10" fill="#fff" stroke="#fecdd3" stroke-width="1.5"/>
+      <text x="160" y="26" text-anchor="middle" font-size="8" fill="#e11d48" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">Contract Lifecycle</text>
+      <rect x="60" y="34" width="36" height="10" rx="5" fill="#fecdd3"/><text x="78" y="42" text-anchor="middle" font-size="5.5" fill="#e11d48" font-weight="600">Create</text>
+      <text x="102" y="42" text-anchor="middle" font-size="8" fill="#e11d48">&#8594;</text>
+      <rect x="110" y="34" width="36" height="10" rx="5" fill="#fecdd3"/><text x="128" y="42" text-anchor="middle" font-size="5.5" fill="#e11d48" font-weight="600">Review</text>
+      <text x="152" y="42" text-anchor="middle" font-size="8" fill="#e11d48">&#8594;</text>
+      <rect x="160" y="34" width="36" height="10" rx="5" fill="#fecdd3"/><text x="178" y="42" text-anchor="middle" font-size="5.5" fill="#e11d48" font-weight="600">Sign</text>
+      <text x="202" y="42" text-anchor="middle" font-size="8" fill="#e11d48">&#8594;</text>
+      <rect x="210" y="34" width="36" height="10" rx="5" fill="#fecdd3"/><text x="228" y="42" text-anchor="middle" font-size="5.5" fill="#e11d48" font-weight="600">Archive</text>
+      <rect x="10" y="62" width="145" height="68" rx="10" fill="#fff" stroke="#fecdd3" stroke-width="1.5"/>
+      <text x="82" y="80" text-anchor="middle" font-size="7.5" fill="#e11d48" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">Templates</text>
+      <rect x="22" y="88" width="121" height="12" rx="4" fill="#fff1f2" stroke="#fecdd3" stroke-width=".6"/>
+      <rect x="26" y="91" width="6" height="6" rx="1.5" fill="#e11d48" opacity=".3"/><text x="38" y="97" font-size="5.5" fill="#334155">NDA Template</text><text x="130" y="97" text-anchor="end" font-size="5" fill="#059669">Active</text>
+      <rect x="22" y="104" width="121" height="12" rx="4" fill="#fff1f2" stroke="#fecdd3" stroke-width=".6"/>
+      <rect x="26" y="107" width="6" height="6" rx="1.5" fill="#e11d48" opacity=".3"/><text x="38" y="113" font-size="5.5" fill="#334155">MSA Template</text><text x="130" y="113" text-anchor="end" font-size="5" fill="#059669">Active</text>
+      <rect x="165" y="62" width="145" height="68" rx="10" fill="#fff" stroke="#fecdd3" stroke-width="1.5"/>
+      <text x="237" y="80" text-anchor="middle" font-size="7.5" fill="#e11d48" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">Digital Signatures</text>
+      <circle cx="210" cy="104" r="12" fill="#fff1f2" stroke="#fecdd3" stroke-width="1"/>
+      <path d="M205 104c2-3 4-1 6-4s3 0 5-2" stroke="#e11d48" stroke-width="1.3" stroke-linecap="round" fill="none"/>
+      <text x="210" y="120" text-anchor="middle" font-size="5" fill="#64748b">Signed</text>
+      <circle cx="250" cy="104" r="12" fill="#dcfce7" stroke="#bbf7d0" stroke-width="1"/>
+      <path d="M246 104l3 3 5-5" stroke="#059669" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <text x="250" y="120" text-anchor="middle" font-size="5" fill="#64748b">Verified</text>
+      <rect x="40" y="140" width="240" height="32" rx="8" fill="#fff" stroke="#e11d48" stroke-width="1.5"/>
+      <text x="160" y="158" text-anchor="middle" font-size="7" fill="#e11d48" font-weight="700" font-family="Plus Jakarta Sans,sans-serif">Central Repository &amp; Analytics</text>
+      <text x="160" y="168" text-anchor="middle" font-size="5.5" fill="#64748b">Search, track, and monitor compliance across all contracts</text>
+      <text x="160" y="184" text-anchor="middle" font-size="7.5" fill="#94a3b8" font-family="Plus Jakarta Sans,sans-serif">From Draft to Done. Automated.</text>
+    </svg></div></div>
+    <div class="g3">
+      <div class="card"><div class="iw iw-rose"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" stroke="#e11d48" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Contract Automation</h3><p>Automate the entire contract lifecycle from draft to execution, reducing turnaround time and manual effort.</p></div>
+      <div class="card"><div class="iw iw-rose"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z" stroke="#e11d48" stroke-width="1.8"/><path d="M14 2v6h6" stroke="#e11d48" stroke-width="1.8"/></svg></div><h3>Template &amp; Signature Management</h3><p>Reusable contract templates with clause libraries. Integrated digital signatures for fast, legally binding execution.</p></div>
+      <div class="card"><div class="iw iw-rose"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 11-5.93-9.14" stroke="#e11d48" stroke-width="1.8" stroke-linecap="round"/><path d="M22 4L12 14.01l-3-3" stroke="#e11d48" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>Approvals &amp; Integrations</h3><p>Configurable approval workflows with system integrations to keep contracts in sync with your business processes.</p></div>
+      <div class="card"><div class="iw iw-rose"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M3 3v18h18" stroke="#e11d48" stroke-width="1.8" stroke-linecap="round"/><path d="M7 16l4-4 4 4 4-4" stroke="#e11d48" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Analytics &amp; Repository</h3><p>Contract analytics dashboard with a centralized repository for easy search, tracking, and compliance monitoring.</p></div>
+    </div>
+  </div>
+
+</div></section>
+</div>
+<!-- INTEGRATIONS -->
+<div id="page-integrations" class="page">
+<section style="padding:72px 0 44px"><div class="container">
+  <div class="sh"><div class="pill"><span class="pill-dot"></span>Integrations</div><h2>Plug &amp; play with your existing stack</h2><p>noERP connects seamlessly with the tools your team already uses. New integrations are added every month.</p></div>
+  <p style="font-size:.76rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:14px;font-weight:700">Communication &amp; Productivity</p>
+  <div class="int-grid" style="margin-bottom:44px">
+    <div class="int-card"><div class="int-logo" style="background:rgba(37,99,235,.09)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="9" height="9" rx="2" fill="#2563eb"/><rect x="13" y="2" width="9" height="9" rx="2" fill="#2563eb" opacity=".6"/><rect x="2" y="13" width="9" height="9" rx="2" fill="#2563eb" opacity=".6"/><rect x="13" y="13" width="9" height="9" rx="2" fill="#2563eb" opacity=".3"/></svg></div><h4>Microsoft Teams</h4><p>Receive task notifications and approve requests inside Teams.</p><div class="int-tag">&#10003; Plug &amp; play</div></div>
+    <div class="int-card"><div class="int-logo" style="background:rgba(217,119,6,.09)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="4" width="20" height="16" rx="2" stroke="#d97706" stroke-width="1.8"/><path d="M2 8l10 6 10-6" stroke="#d97706" stroke-width="1.8"/></svg></div><h4>Microsoft Outlook</h4><p>Email-triggered workflows and calendar-synced check-ins.</p><div class="int-tag">&#10003; Plug &amp; play</div></div>
+    <div class="int-card"><div class="int-logo" style="background:rgba(5,150,105,.09)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="4" stroke="#059669" stroke-width="1.5"/><rect x="6" y="6" width="5" height="5" rx="1" fill="#059669"/><rect x="13" y="6" width="5" height="5" rx="1" fill="#059669" opacity=".6"/><rect x="6" y="13" width="5" height="5" rx="1" fill="#059669" opacity=".6"/><rect x="13" y="13" width="5" height="5" rx="1" fill="#059669" opacity=".3"/></svg></div><h4>Slack</h4><p>AI bot for approvals and updates without leaving the conversation.</p><div class="int-tag">&#10003; Plug &amp; play</div></div>
+    <div class="int-card"><div class="int-logo" style="background:rgba(37,99,235,.07)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="2" width="20" height="20" rx="4" stroke="#2563eb" stroke-width="1.5"/><rect x="6" y="7" width="12" height="2" rx="1" fill="#2563eb"/><rect x="6" y="11" width="12" height="2" rx="1" fill="#2563eb" opacity=".6"/><rect x="6" y="15" width="8" height="2" rx="1" fill="#2563eb" opacity=".4"/></svg></div><h4>Microsoft 365</h4><p>Full suite — SharePoint, OneDrive, and calendar synced automatically.</p><div class="int-tag">&#10003; Plug &amp; play</div></div>
+  </div>
+  <p style="font-size:.76rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:14px;font-weight:700">CRM &amp; Finance</p>
+  <div class="int-grid" style="margin-bottom:44px">
+    <div class="int-card"><div class="int-logo" style="background:rgba(37,99,235,.09)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M4 20V4a1 1 0 011-1h14a1 1 0 011 1v16l-3-2-2 2-2-2-2 2-2-2-3 2z" stroke="#2563eb" stroke-width="1.5" stroke-linecap="round"/></svg></div><h4>Salesforce</h4><p>Sync customer data and pipeline stages into performance KPIs.</p><div class="int-tag">&#10003; Plug &amp; play</div></div>
+    <div class="int-card"><div class="int-logo" style="background:rgba(217,119,6,.09)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#d97706" stroke-width="1.5"/><path d="M8 12l3 3 5-5" stroke="#d97706" stroke-width="1.5" stroke-linecap="round"/></svg></div><h4>HubSpot</h4><p>Connect CRM activities to team goals and auto-update from deal closes.</p><div class="int-tag">&#10003; Plug &amp; play</div></div>
+    <div class="int-card"><div class="int-logo" style="background:rgba(5,150,105,.09)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="2" y="7" width="20" height="14" rx="2" stroke="#059669" stroke-width="1.5"/><path d="M16 7V5a2 2 0 00-4 0v2" stroke="#059669" stroke-width="1.5"/></svg></div><h4>QuickBooks</h4><p>Financial data sync for AP/AR, vendor payments, and budget tracking.</p><div class="int-tag">&#10003; Plug &amp; play</div></div>
+    <div class="int-card"><div class="int-logo" style="background:rgba(124,58,237,.09)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#7c3aed" stroke-width="1.5" stroke-linecap="round"/></svg></div><h4>SAP / Oracle</h4><p>Legacy ERP data bridge and real-time sync for existing investments.</p><div class="int-tag">&#10003; Plug &amp; play</div></div>
+  </div>
+  <p style="font-size:.76rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:14px;font-weight:700;margin-top:36px">Developer &amp; Productivity</p>
+  <div class="int-grid" style="margin-bottom:44px">
+    <div class="int-card"><div class="int-logo" style="background:rgba(15,20,40,.06)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 00-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0020 4.77 5.07 5.07 0 0019.91 1S18.73.65 16 2.48a13.38 13.38 0 00-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 005 4.77a5.44 5.44 0 00-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 009 18.13V22" stroke="#0f1428" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h4>GitHub</h4><p>Sync code activity to OKRs and track dev velocity linked to goals.</p><div class="int-tag">&#10003; Plug &amp; play</div></div>
+    <div class="int-card"><div class="int-logo" style="background:rgba(37,99,235,.09)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="3" stroke="#2563eb" stroke-width="1.5"/><path d="M7 12h4v4H7z" stroke="#2563eb" stroke-width="1.5"/><circle cx="15" cy="9" r="3" stroke="#2563eb" stroke-width="1.5"/></svg></div><h4>Jira</h4><p>Link sprints and epics to team KPIs. Automate task tracking across projects.</p><div class="int-tag">&#10003; Plug &amp; play</div></div>
+    <div class="int-card"><div class="int-logo" style="background:rgba(225,29,72,.07)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="#e11d48" stroke-width="1.5" stroke-linecap="round"/></svg></div><h4>Zoho</h4><p>Sync CRM, HR, and finance data from your Zoho suite directly.</p><div class="int-tag">&#10003; Plug &amp; play</div></div>
+    <div class="int-card"><div class="int-logo" style="background:rgba(5,150,105,.07)"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 2a10 10 0 100 20 10 10 0 000-20z" stroke="#059669" stroke-width="1.5"/><path d="M10 9l5 3-5 3V9z" fill="#059669"/></svg></div><h4>Google Workspace</h4><p>Gmail, Calendar, Drive, and Sheets connected for seamless automation.</p><div class="int-tag">&#10003; Plug &amp; play</div></div>
+  </div>
+  <div class="g2">
+    <div class="card"><div class="iw iw-blue"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M10 13a5 5 0 007.54.54l3-3a5 5 0 00-7.07-7.07l-1.72 1.71M14 11a5 5 0 00-7.54-.54l-3 3a5 5 0 007.07 7.07l1.71-1.71" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Internal APIs</h3><p>Connect proprietary systems via noERP's RESTful API. Full documentation, webhooks, and SDKs for custom integrations.</p></div>
+    <div class="card"><div class="iw iw-green"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#059669" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Enterprise Security</h3><p>All integrations use OAuth 2.0, encrypted transit, and role-based access. SOC 2 compliant with full audit logging.</p></div>
+  </div>
+</div></section>
+<div class="container" style="padding-bottom:80px"><div class="cta-block"><h2>Don't see your tool?</h2><p>Our integrations team would be happy to build custom connectors for your stack.</p><div class="cta-btns"><button class="btn btn-white btn-lg" data-action="go:demo">Talk to Integrations Team &#8594;</button></div></div></div>
+</div>
+<!-- PRICING -->
+<div id="page-pricing" class="page">
+<section style="padding:72px 0 44px"><div class="container">
+  <div class="sh"><div class="pill"><span class="pill-dot"></span>Pricing</div><h2>Simple, transparent pricing</h2><p>Every plan includes core AI automation, single-screen interface, and your first integrations.</p></div>
+  <div class="pricing-grid">
+    <div class="p-card"><div class="p-tier">Starter</div><div class="p-tag">Ideal for small teams beginning their automation journey</div><div class="p-price">$29</div><div class="p-period">per user / month, billed annually</div><button class="btn btn-ghost" style="width:100%;justify-content:center" data-action="go:demo">Get Started</button><ul class="p-feats"><li class="pf"><span class="pf-ck">&#10003;</span>Up to 50 users</li><li class="pf"><span class="pf-ck">&#10003;</span>Single-screen interface</li><li class="pf"><span class="pf-ck">&#10003;</span>Basic AI automation</li><li class="pf"><span class="pf-ck">&#10003;</span>Performance module</li><li class="pf"><span class="pf-ck">&#10003;</span>3 integrations</li><li class="pf"><span class="pf-ck">&#10003;</span>Email support</li></ul></div>
+    <div class="p-card featured"><div class="p-badge">Most Popular</div><div class="p-tier" style="color:rgba(15,20,40,.45)">Growth</div><div class="p-tag">Perfect for scaling companies needing advanced workflows</div><div class="p-price">$79</div><div class="p-period">per user / month, billed annually</div><button class="btn btn-primary" style="width:100%;justify-content:center" data-action="go:demo">Book a Demo &#8594;</button><ul class="p-feats"><li class="pf"><span class="pf-ck">&#10003;</span>Up to 500 users</li><li class="pf"><span class="pf-ck">&#10003;</span>Full AI automation</li><li class="pf"><span class="pf-ck">&#10003;</span>HRIS + Performance + Finance</li><li class="pf"><span class="pf-ck">&#10003;</span>People Analytics dashboard</li><li class="pf"><span class="pf-ck">&#10003;</span>15 integrations</li><li class="pf"><span class="pf-ck">&#10003;</span>Priority support</li></ul></div>
+    <div class="p-card"><div class="p-tier">Enterprise</div><div class="p-tag">Complete ERP replacement at scale</div><div class="p-price" style="font-size:2.2rem">Custom</div><div class="p-period">tailored to your organization</div><button class="btn btn-primary" style="width:100%;justify-content:center" data-action="go:demo">Contact Sales</button><ul class="p-feats"><li class="pf"><span class="pf-ck">&#10003;</span>Unlimited users</li><li class="pf"><span class="pf-ck">&#10003;</span>Custom AI model tuning</li><li class="pf"><span class="pf-ck">&#10003;</span>All modules including CLM</li><li class="pf"><span class="pf-ck">&#10003;</span>Unlimited integrations + API</li><li class="pf"><span class="pf-ck">&#10003;</span>On-premise deployment</li><li class="pf"><span class="pf-ck">&#10003;</span>Dedicated CSM + SLA</li></ul></div>
+  </div>
+  <div style="max-width:660px;margin:72px auto 0">
+    <h2 style="text-align:center;margin-bottom:28px;font-size:2rem">Questions</h2>
+    <div class="faq-item"><button class="faq-q" data-action="faq">How long does implementation take?<span class="faq-ico">+</span></button><div class="faq-a"><p>Most teams go live within days. Starter setups take under an hour. Enterprise implementations typically take 2-4 weeks — compared to 6-18 months for traditional ERPs.</p></div></div>
+    <div class="faq-item"><button class="faq-q" data-action="faq">Can we use noERP alongside our existing ERP?<span class="faq-ico">+</span></button><div class="faq-a"><p>Absolutely. Many teams layer noERP on top of existing tools to connect data and automate workflows before fully transitioning.</p></div></div>
+    <div class="faq-item"><button class="faq-q" data-action="faq">How does pricing compare to separate HRIS + Performance + Finance tools?<span class="faq-ico">+</span></button><div class="faq-a"><p>Most organizations spend $40-80 per user per month across separate tools. noERP Growth at $79/user covers all three — plus AI automation and a single-screen interface.</p></div></div>
+    <div class="faq-item"><button class="faq-q" data-action="faq">Is there a free trial or sandbox?<span class="faq-ico">+</span></button><div class="faq-a"><p>We offer a live sandbox environment — no setup, no learning curve. Please book a demo to get access and see the platform in action.</p></div></div>
+    <div class="faq-item"><button class="faq-q" data-action="faq">How does noERP handle sensitive enterprise data?<span class="faq-ico">+</span></button><div class="faq-a"><p>All data is encrypted at rest and in transit. Lightweight SLM models can run on your infrastructure — your data never leaves your environment. SOC 2 Type II compliant.</p></div></div>
+  </div>
+</div></section>
+<div class="container" style="padding-bottom:80px"><div class="cta-block"><h2>Not sure which plan is right?</h2><p>We would be happy to help you find the right fit. Let us map the right features to your needs.</p><div class="cta-btns"><button class="btn btn-white btn-lg" data-action="go:demo">Contact Sales &#8594;</button></div></div></div>
+</div>
+
+<!-- RESOURCES -->
+<div id="page-resources" class="page">
+<section style="padding:72px 0 40px"><div class="container"><div class="sh"><div class="pill"><span class="pill-dot"></span>Resources</div><h2>Learn, build, and grow with noERP</h2></div></div></section>
+<section style="padding:0 0 80px"><div class="container">
+  <p style="font-size:.76rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:14px;font-weight:700">Blog</p>
+  <div class="res-grid" style="margin-bottom:44px">
+    <div class="r-card" style="cursor:pointer"><div class="r-type">Blog</div><h3>Why 70% of ERP Implementations Fall Short</h3><p>A data-driven look at the root causes and how AI-native platforms are rewriting the playbook.</p><span class="r-link">Read article &#8594;</span></div>
+    <div class="r-card" style="cursor:pointer"><div class="r-type">Blog</div><h3>The Single-Screen Revolution</h3><p>How noERP's architecture replaces multiple systems with one intelligent workspace.</p><span class="r-link">Read article &#8594;</span></div>
+    <div class="r-card" style="cursor:pointer"><div class="r-type">Blog</div><h3>OKRs in the Age of AI</h3><p>How AI transforms OKRs from quarterly admin into continuous performance intelligence.</p><span class="r-link">Read article &#8594;</span></div>
+  </div>
+  <p style="font-size:.76rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:14px;font-weight:700">Documentation</p>
+  <div class="res-grid" style="margin-bottom:44px">
+    <div class="r-card" style="cursor:pointer"><div class="r-type">Documentation</div><h3>Platform Setup Guide</h3><p>Step-by-step technical documentation for connecting tools, configuring SSO, and deploying noERP.</p><span class="r-link">View docs &#8594;</span></div>
+    <div class="r-card" style="cursor:pointer"><div class="r-type">Documentation</div><h3>API Reference</h3><p>Full REST API documentation with endpoint references, authentication guides, and code samples.</p><span class="r-link">View API docs &#8594;</span></div>
+    <div class="r-card" style="cursor:pointer"><div class="r-type">Product Guide</div><h3>Performance Management Playbook</h3><p>A complete guide to setting up OKRs, running feedback cycles, and reading People Analytics.</p><span class="r-link">Read guide &#8594;</span></div>
+  </div>
+  <p style="font-size:.76rem;text-transform:uppercase;letter-spacing:.1em;color:var(--text3);margin-bottom:14px;font-weight:700">Case Studies</p>
+  <div class="g2">
+    <div class="r-card" style="cursor:pointer"><div class="r-type">Case Study</div><h3>SaaS Enterprise: 80% Reduction in Finance Data Entry</h3><p>How a 400-person SaaS company eliminated manual workflows and achieved full adoption in 3 weeks.</p><span class="r-link">Read &#8594;</span></div>
+    <div class="r-card" style="cursor:pointer"><div class="r-type">Case Study</div><h3>Global Retail: HR Transformation Across 12 Countries</h3><p>Replaced multiple HRIS tools with noERP, reducing IT overhead by 60% and hitting 92% adoption.</p><span class="r-link">Read &#8594;</span></div>
+  </div>
+</div></section>
+</div>
+
+<!-- DEMO -->
+<div id="page-demo" class="page">
+<section style="padding:72px 0">
+  <div class="container">
+    <div class="sh" style="margin-bottom:52px"><div class="pill"><span class="pill-dot"></span>Book a Demo</div><h2>See noERP in action</h2><p>We would love to give you a personalized 45-minute walkthrough tailored to your organization.</p></div>
+    <div class="demo-grid">
+      <div class="demo-form">
+        <h3 style="margin-bottom:22px">Schedule your demo</h3>
+        <div class="form-row">
+          <div class="form-g"><label class="form-lbl">First Name</label><input class="form-inp" type="text" placeholder="Jane"></div>
+          <div class="form-g"><label class="form-lbl">Last Name</label><input class="form-inp" type="text" placeholder="Smith"></div>
+        </div>
+        <div class="form-g"><label class="form-lbl">Work Email</label><input class="form-inp" type="email" placeholder="jane@company.com"></div>
+        <div class="form-g"><label class="form-lbl">Company</label><input class="form-inp" type="text" placeholder="Your company name"></div>
+        <div class="form-g"><label class="form-lbl">Company Size</label><select class="form-sel"><option>Select size...</option><option>1-50 employees</option><option>51-200 employees</option><option>201-1,000 employees</option><option>1,000+ employees</option></select></div>
+        <div class="form-g"><label class="form-lbl">What are you looking to solve?</label><textarea class="form-ta" placeholder="Please share a bit about your current workflows..."></textarea></div>
+        <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center" onclick="submitDemo(this)">Book My Demo</button>
+        <p style="font-size:.74rem;color:var(--text3);text-align:center;margin-top:10px">We will reach out within 24 hours.</p>
+      </div>
+      <div>
+        <h3 style="margin-bottom:26px;font-size:1.15rem">What to expect</h3>
+        <div class="demo-ben"><div class="b-icon iw-blue"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2" stroke="#2563eb" stroke-width="1.8"/><path d="M8 21h8M12 17v4" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="b-txt"><h4>Live Platform Walkthrough</h4><p>A 45-minute live session covering the single-screen interface and AI automation in action.</p></div></div>
+        <div class="demo-ben"><div class="b-icon iw-purple"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M12 2a7 7 0 017 7c0 2.5-1.3 4.7-3.3 6L15 21H9l-.7-6A7 7 0 0112 2z" stroke="#7c3aed" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="b-txt"><h4>AI Automation Examples</h4><p>See AI handle real enterprise workflows in plain language with zero form-filling.</p></div></div>
+        <div class="demo-ben"><div class="b-icon iw-teal"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z" stroke="#0d9488" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="b-txt"><h4>Q&amp;A with Product Specialists</h4><p>Ask anything about implementation, integrations, pricing, and your current stack.</p></div></div>
+        <div class="demo-ben"><div class="b-icon iw-amber"><svg width="20" height="20" fill="none" viewBox="0 0 24 24"><path d="M3 3v18h18" stroke="#d97706" stroke-width="1.8" stroke-linecap="round"/><path d="M7 16l4-4 4 4 4-4" stroke="#d97706" stroke-width="1.8" stroke-linecap="round"/></svg></div><div class="b-txt"><h4>Custom Deployment Roadmap</h4><p>Walk away with a tailored plan and estimated ROI based on your team size and workflows.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+<!-- CONTACT -->
+<div id="page-contact" class="page">
+<section style="padding:72px 0 40px"><div class="container"><div class="sh"><div class="pill"><span class="pill-dot"></span>Contact</div><h2>We would love to hear from you</h2><p>Whether you have a question about features, pricing, or anything else, our team is here to help.</p></div></div></section>
+<section style="padding:0 0 80px"><div class="container">
+  <div class="g3" style="margin-bottom:48px">
+    <div class="int-card" style="text-align:center"><div class="iw iw-blue" style="margin:0 auto 10px"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="#2563eb" stroke-width="1.8"/><path d="M22 6l-10 7L2 6" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>Email</h3><p style="font-size:.85rem;color:var(--blue)">marketing@noerp.com</p></div>
+    <div class="int-card" style="text-align:center"><div class="iw iw-green" style="margin:0 auto 10px"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07 19.5 19.5 0 01-6-6A19.79 19.79 0 012.12 4.18 2 2 0 014.11 2h3a2 2 0 012 1.72c.127.96.362 1.903.7 2.81a2 2 0 01-.45 2.11L8.09 9.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45c.907.338 1.85.573 2.81.7A2 2 0 0122 16.92z" stroke="#059669" stroke-width="1.8"/></svg></div><h3>Phone</h3><p style="font-size:.85rem;color:var(--green)">+1 (248) 832-8111</p></div>
+    <div class="int-card" style="text-align:center"><div class="iw iw-amber" style="margin:0 auto 10px"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z" stroke="#d97706" stroke-width="1.8"/><circle cx="12" cy="10" r="3" stroke="#d97706" stroke-width="1.8"/></svg></div><h3>Office</h3><p style="font-size:.85rem">2100 N Greenville Ave #105<br>Richardson, TX 75082<br>United States</p></div>
+  </div>
+  <div style="max-width:600px;margin:0 auto">
+    <div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:36px;box-shadow:0 4px 20px rgba(0,0,0,.07)">
+      <h3 style="margin-bottom:22px">Send us a message</h3>
+      <div class="form-row" style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px">
+        <div class="form-g"><label class="form-lbl">First Name</label><input class="form-inp" type="text" placeholder="Jane"></div>
+        <div class="form-g"><label class="form-lbl">Last Name</label><input class="form-inp" type="text" placeholder="Smith"></div>
+      </div>
+      <div class="form-g" style="margin-bottom:14px"><label class="form-lbl">Work Email</label><input class="form-inp" type="email" placeholder="jane@company.com"></div>
+      <div class="form-g" style="margin-bottom:14px"><label class="form-lbl">Subject</label><input class="form-inp" type="text" placeholder="How can we help?"></div>
+      <div class="form-g" style="margin-bottom:22px"><label class="form-lbl">Message</label><textarea class="form-ta" rows="5" placeholder="Please share more about your question or project..."></textarea></div>
+      <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center">Send Message &#8594;</button>
+    </div>
+  </div>
+</div></section>
+</div>
+
+<!-- PRIVACY -->
+<div id="page-privacy" class="page">
+<section style="padding:72px 0 40px"><div class="container"><div class="sh"><div class="pill"><span class="pill-dot"></span>Legal</div><h2>Privacy Policy</h2><p>Last updated: March 1, 2026</p></div></div></section>
+<section style="padding:0 0 80px"><div class="container"><div style="max-width:760px;margin:0 auto"><div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:40px;box-shadow:0 2px 12px rgba(0,0,0,.05)">
+  <h3 style="margin-bottom:14px">1. Information We Collect</h3><p style="font-size:.9rem;margin-bottom:28px">We collect information you provide directly, such as your name, email address, company name, and job title. We also collect usage data to improve our services. When you use noERP, we process business data solely to provide and improve our services.</p>
+  <h3 style="margin-bottom:14px">2. How We Use Your Information</h3><p style="font-size:.9rem;margin-bottom:28px">We use your information to provide, maintain, and improve the noERP platform. Our SLM models process your data on-device or within your dedicated cloud environment. We do not use customer business data to train our AI models.</p>
+  <h3 style="margin-bottom:14px">3. Data Security</h3><p style="font-size:.9rem;margin-bottom:28px">All data is encrypted at rest (AES-256) and in transit (TLS 1.3). We maintain SOC 2 Type II compliance and conduct annual third-party security audits.</p>
+  <h3 style="margin-bottom:14px">4. Your Rights</h3><p style="font-size:.9rem;margin-bottom:28px">You have the right to access, correct, delete, or export your personal data at any time. For GDPR, CCPA, and other data subject requests, please contact privacy@noerp.com.</p>
+  <h3 style="margin-bottom:14px">5. Contact</h3><p style="font-size:.9rem">For privacy-related questions, please contact our Data Protection Officer at <span style="color:var(--blue)">privacy@noerp.com</span>.</p>
+</div></div></div></section>
+</div>
+
+<!-- TERMS -->
+<div id="page-terms" class="page">
+<section style="padding:72px 0 40px"><div class="container"><div class="sh"><div class="pill"><span class="pill-dot"></span>Legal</div><h2>Terms of Service</h2><p>Last updated: March 1, 2026</p></div></div></section>
+<section style="padding:0 0 80px"><div class="container"><div style="max-width:760px;margin:0 auto"><div style="background:var(--surface);border:1px solid var(--border);border-radius:var(--r2);padding:40px;box-shadow:0 2px 12px rgba(0,0,0,.05)">
+  <h3 style="margin-bottom:14px">1. Acceptance of Terms</h3><p style="font-size:.9rem;margin-bottom:28px">By accessing or using the noERP platform, you agree to be bound by these Terms of Service. These terms apply to all users, including individual users, businesses, and enterprise customers.</p>
+  <h3 style="margin-bottom:14px">2. Permitted Use</h3><p style="font-size:.9rem;margin-bottom:28px">noERP grants you a non-exclusive, non-transferable license to access and use the platform for your internal business operations during the term of your subscription.</p>
+  <h3 style="margin-bottom:14px">3. Service Level Agreement</h3><p style="font-size:.9rem;margin-bottom:28px">We commit to 99.9% platform uptime for all paid plans, measured monthly. Scheduled maintenance windows are communicated 72 hours in advance.</p>
+  <h3 style="margin-bottom:14px">4. Termination</h3><p style="font-size:.9rem">Either party may terminate the subscription with 30 days written notice. Upon termination, you may export your data for up to 60 days.</p>
+</div></div></div></section>
+</div>
+
+<!-- SECURITY -->
+<div id="page-security" class="page">
+<section style="padding:72px 0 40px"><div class="container"><div class="sh"><div class="pill"><span class="pill-dot"></span>Security</div><h2>Enterprise-grade security, built in</h2><p>Your data protection is our top priority. Here is how we keep your organization safe.</p></div></div></section>
+<section style="padding:0 0 80px"><div class="container">
+  <div class="g3" style="margin-bottom:48px">
+    <div class="int-card" style="text-align:center"><div class="iw iw-blue" style="margin:0 auto 10px"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#2563eb" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>SOC 2 Type II</h3><p style="font-size:.85rem">Independently audited annually with full compliance.</p></div>
+    <div class="int-card" style="text-align:center"><div class="iw iw-green" style="margin:0 auto 10px"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="#059669" stroke-width="1.8" stroke-linecap="round"/><path d="M9 12l2 2 4-4" stroke="#059669" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div><h3>GDPR Compliant</h3><p style="font-size:.85rem">Full EU data protection compliance with data residency options.</p></div>
+    <div class="int-card" style="text-align:center"><div class="iw iw-purple" style="margin:0 auto 10px"><svg width="18" height="18" fill="none" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2" stroke="#7c3aed" stroke-width="1.8"/><path d="M7 11V7a5 5 0 0110 0v4" stroke="#7c3aed" stroke-width="1.8" stroke-linecap="round"/></svg></div><h3>ISO 27001</h3><p style="font-size:.85rem">Certified information security management system.</p></div>
+  </div>
+  <div class="cta-block"><h2>Need a security review?</h2><p>We are happy to share our SOC 2 report and complete your security questionnaire.</p><div class="cta-btns"><button class="btn btn-white btn-lg" data-action="go:contact">Contact Security Team &#8594;</button></div></div>
+</div></section>
+</div>
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="ft-brand"><div class="ft-logo"><svg width="28" height="28" viewBox="0 0 40 40" fill="none"><rect width="40" height="40" rx="10" fill="#2563eb"/><path d="M11 28V13.5C11 12.67 11.67 12 12.5 12H15.5C16.33 12 17 12.67 17 13.5V28" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M17 18H23C23.83 18 24.5 18.67 24.5 19.5V28" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="28" cy="14" r="3" fill="#60a5fa"/><path d="M25.5 14L27.2 15.7L30.5 12.3" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg><em>no</em>ERP</div><p>The single-screen, SLM-powered platform that eliminates ERP complexity, automates workflows, and helps teams move from data entry to high-performance outcomes.</p></div>
+      <div class="ft-col"><h4>Product</h4><span data-action="go:modules">Features</span><span data-action="go:integrations">Integrations</span><span data-action="go:pricing">Pricing</span><span data-action="go:demo">Book Demo</span></div>
+      <div class="ft-col"><h4>Resources</h4><span data-action="go:resources">Blog</span><span data-action="go:resources">Documentation</span><span data-action="go:resources">Case Studies</span></div>
+      <div class="ft-col"><h4>Company</h4><span data-action="go:contact">Contact</span></div>
+      <div class="ft-col"><h4>Legal</h4><span data-action="go:privacy">Privacy Policy</span><span data-action="go:terms">Terms of Service</span><span data-action="go:security">Security</span></div>
+    </div>
+    <div class="ft-bottom"><span>&#169; 2026 noERP. All rights reserved.</span><span>Built for the post-ERP era.</span></div>
+  </div>
+</footer>
+
+</body>
+</html>
